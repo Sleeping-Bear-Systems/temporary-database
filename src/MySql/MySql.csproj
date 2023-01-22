@@ -8,10 +8,10 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Description>A class library containing useful helper classes.</Description>
+    <Description>A class library for creating temporary MySQL databases.</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageIcon>icon.png</PackageIcon>
-    <PackageId>SleepingBearSystems.Tools.Common</PackageId>
+    <PackageId>SleepingBearSystems.TemporaryDatabase.MySql</PackageId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,7 +20,6 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="MySql.Data" Version="8.0.32" />
   </ItemGroup>
 
   <ItemGroup>

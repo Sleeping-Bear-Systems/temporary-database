@@ -8,10 +8,10 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Description>A class library containing useful helper classes.</Description>
+    <Description>A class library for creating temporary Postgres databases.</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageIcon>icon.png</PackageIcon>
-    <PackageId>SleepingBearSystems.Tools.Common</PackageId>
+    <PackageId>SleepingBearSystems.TemporaryDatabase.Postgres</PackageId>
   </PropertyGroup>
 
   <ItemGroup>

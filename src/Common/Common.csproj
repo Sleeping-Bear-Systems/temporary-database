@@ -2,16 +2,8 @@
 
   <PropertyGroup>
     <AssemblyName>SleepingBearSystems.TemporaryDatabase.Common</AssemblyName>
-    <IsPackable>true</IsPackable>
     <RootNamespace>SleepingBearSystems.TemporaryDatabase.Common</RootNamespace>
     <TargetFramework>net7.0</TargetFramework>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <Description>A class library containing useful helper classes.</Description>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageIcon>icon.png</PackageIcon>
-    <PackageId>SleepingBearSystems.Tools.Common</PackageId>
   </PropertyGroup>
 
   <ItemGroup>

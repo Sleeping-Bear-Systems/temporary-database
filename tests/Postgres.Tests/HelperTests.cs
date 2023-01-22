@@ -20,7 +20,8 @@ internal static class HelperTests
         var connectionString = Environment.GetEnvironmentVariable(TestServerEnvironmentVariable);
         var builder = new NpgsqlConnectionStringBuilder(connectionString);
 
-        using var guard = Helper.FromParameters(builder.Host!, (ushort)builder.Port, builder.Username!, builder.Password!);
+        using var guard =
+            Helper.FromParameters(builder.Host!, (ushort)builder.Port, builder.Username!, builder.Password!);
         CheckDatabaseExists(guard.ConnectionString);
     }
 

@@ -64,12 +64,4 @@ public static class Helper
 
         return TemporaryDatabaseGuard.Create(builder.ToString());
     }
-
-    /// <summary>
-    /// Generates a random database name.
-    /// </summary>
-    public static string GenerateRandomDatabaseName() =>
-        $"sbs_{Guid.NewGuid()}"
-            .Replace("-", "")
-            .ToLowerInvariant();
 }

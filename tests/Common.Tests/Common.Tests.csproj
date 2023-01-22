@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <AssemblyName>SleepingBearSystems.TemporaryDatabase.Core.Tests</AssemblyName>
-    <RootNamespace>SleepingBearSystems.TemporaryDatabase.Core.Tests</RootNamespace>
+    <AssemblyName>SleepingBearSystems.TemporaryDatabase.Common.Tests</AssemblyName>
+    <RootNamespace>SleepingBearSystems.TemporaryDatabase.Common.Tests</RootNamespace>
     <TargetFramework>net7.0</TargetFramework>
   </PropertyGroup>
 

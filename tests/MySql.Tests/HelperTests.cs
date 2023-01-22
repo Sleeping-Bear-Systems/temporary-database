@@ -1,5 +1,4 @@
-﻿
-using MySql.Data.MySqlClient;
+﻿using MySql.Data.MySqlClient;
 
 namespace SleepingBearSystems.TemporaryDatabase.MySql.Tests;
 
@@ -21,7 +20,8 @@ internal static class HelperTests
         var connectionString = Environment.GetEnvironmentVariable(TestServerEnvironmentVariable);
         var builder = new MySqlConnectionStringBuilder(connectionString);
 
-        using var guard = Helper.FromParameters(builder.Server!, (ushort)builder.Port, builder.UserID!, builder.Password!);
+        using var guard =
+            Helper.FromParameters(builder.Server!, (ushort)builder.Port, builder.UserID!, builder.Password!);
         CheckDatabaseExists(guard.ConnectionString);
     }
 

@@ -11,7 +11,7 @@
     <Description>A class library for creating temporary databases.</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageIcon>icon.png</PackageIcon>
-    <PackageId>SleepingBearSystems.TemporaryDatabase.MySql</PackageId>
+    <PackageId>SleepingBearSystems.TemporaryDatabase.Common</PackageId>
   </PropertyGroup>
 
   <ItemGroup>

@@ -2,16 +2,33 @@
 
   <PropertyGroup>
     <AssemblyName>SleepingBearSystems.TemporaryDatabase.MySql</AssemblyName>
+    <IsPackable>true</IsPackable>
     <RootNamespace>SleepingBearSystems.TemporaryDatabase.MySql</RootNamespace>
     <TargetFramework>net7.0</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <Description>A class library containing useful helper classes.</Description>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageId>SleepingBearSystems.Tools.Common</PackageId>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="MySql.Data" Version="8.0.32" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MySql.Data" Version="8.0.32" />
+    <None Include="..\icon.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="$(AssemblyName).Test" />
   </ItemGroup>
 
 </Project>

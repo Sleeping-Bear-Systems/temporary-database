@@ -2,8 +2,31 @@
 
   <PropertyGroup>
     <AssemblyName>SleepingBearSystems.TemporaryDatabase.Core</AssemblyName>
+    <IsPackable>true</IsPackable>
     <RootNamespace>SleepingBearSystems.TemporaryDatabase.Core</RootNamespace>
     <TargetFramework>net7.0</TargetFramework>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <Description>A class library containing useful helper classes.</Description>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageId>SleepingBearSystems.Tools.Common</PackageId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\icon.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="$(AssemblyName).Test" />
+  </ItemGroup>
 
 </Project>

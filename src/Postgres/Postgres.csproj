@@ -30,4 +30,8 @@
     <InternalsVisibleTo Include="$(AssemblyName).Test"/>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj"/>
+  </ItemGroup>
+
 </Project>

@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <AssemblyName>SleepingBearSystems.TemporaryDatabase.Core</AssemblyName>
+    <AssemblyName>SleepingBearSystems.TemporaryDatabase.Common</AssemblyName>
     <IsPackable>true</IsPackable>
-    <RootNamespace>SleepingBearSystems.TemporaryDatabase.Core</RootNamespace>
+    <RootNamespace>SleepingBearSystems.TemporaryDatabase.Common</RootNamespace>
     <TargetFramework>net7.0</TargetFramework>
   </PropertyGroup>
 

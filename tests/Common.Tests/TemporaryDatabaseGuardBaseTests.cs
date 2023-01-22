@@ -1,4 +1,6 @@
-﻿namespace SleepingBearSystems.TemporaryDatabase.Core.Tests;
+﻿using SleepingBearSystems.TemporaryDatabase.Common;
+
+namespace SleepingBearSystems.TemporaryDatabase.Core.Tests;
 
 /// <summary>
 /// Tests for <see cref="TemporaryDatabaseGuardBase"/>.

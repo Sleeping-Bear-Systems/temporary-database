@@ -1,4 +1,4 @@
-﻿using SleepingBearSystems.TemporaryDatabase.Core;
+﻿using SleepingBearSystems.TemporaryDatabase.Common;
 
 namespace SleepingBearSystems.TemporaryDatabase.MySql;
 

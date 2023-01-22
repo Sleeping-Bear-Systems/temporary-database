@@ -1,4 +1,4 @@
-﻿namespace SleepingBearSystems.TemporaryDatabase.Core;
+﻿namespace SleepingBearSystems.TemporaryDatabase.Common;
 
 /// <summary>
 /// Temporary database guard interface.

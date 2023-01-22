@@ -1,5 +1,4 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using MySql.Data.MySqlClient;
 
 namespace SleepingBearSystems.TemporaryDatabase.MySql;
@@ -20,6 +19,7 @@ public sealed class TemporaryDatabaseGuard : IDisposable
     public void Dispose()
     {
         using var connection = new MySqlConnection(this._masterConnectionString);
+        connection.Open();
         var cmdText = string.Format(
             CultureInfo.InvariantCulture,
             "DROP DATABASE IF EXISTS {0};",
@@ -42,13 +42,14 @@ public sealed class TemporaryDatabaseGuard : IDisposable
         var database = builder.Database;
         if (string.IsNullOrWhiteSpace(database))
         {
-            database = TemporaryDatabaseGuardHelper.GenerateRandomDatabaseName();
+            database = Helper.GenerateRandomDatabaseName();
         }
 
-        builder.Database = "postgres";
+        builder.Database = "mysql";
         var masterConnectionString = builder.ToString();
 
         using var connection = new MySqlConnection(masterConnectionString);
+        connection.Open();
 
         var cmdText = string.Format(CultureInfo.InvariantCulture, "CREATE DATABASE {0};", database);
         using var command = new MySqlCommand(cmdText, connection);

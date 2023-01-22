@@ -1,11 +1,11 @@
-﻿using Npgsql;
+﻿using MySql.Data.MySqlClient;
 
-namespace SleepingBearSystems.TemporaryDatabase.Postgres;
+namespace SleepingBearSystems.TemporaryDatabase.MySql;
 
 /// <summary>
 /// Helper methods for the <see cref="TemporaryDatabaseGuard"/>.
 /// </summary>
-public static class TemporaryDatabaseGuardHelper
+public static class Helper
 {
     /// <summary>
     /// Creates a temporary database from the specified environment variable.
@@ -15,14 +15,10 @@ public static class TemporaryDatabaseGuardHelper
     public static TemporaryDatabaseGuard FromEnvironmentVariable(string variable, string? database = default)
     {
         var connectionString = Environment.GetEnvironmentVariable(variable);
-        if (string.IsNullOrWhiteSpace(database))
-        {
-            database = GenerateRandomDatabaseName();
-        }
 
-        var builder = new NpgsqlConnectionStringBuilder(connectionString)
+        var builder = new MySqlConnectionStringBuilder(connectionString)
         {
-            Database = database
+            Database = (database ?? string.Empty).Trim()
         };
         return TemporaryDatabaseGuard.Create(builder.ToString());
     }
@@ -30,47 +26,41 @@ public static class TemporaryDatabaseGuardHelper
     /// <summary>
     /// Creates a temporary database from the supplied parameters.
     /// </summary>
-    /// <param name="host">The host.</param>
-    /// <param name="username">The user name.</param>
+    /// <param name="server">The server.</param>
+    /// <param name="userId">The user ID.</param>
     /// <param name="password">The password.</param>
     public static TemporaryDatabaseGuard FromParameters(
-        string host,
-        string username,
+        string server,
+        string userId,
         string password) =>
-        FromParameters(host, port: null, username, password);
+        FromParameters(server, port: null, userId, password);
 
     /// <summary>
     /// Creates a temporary database from the supplied parameters.
     /// </summary>
-    /// <param name="host">The host.</param>
+    /// <param name="server">The server.</param>
     /// <param name="port">The port.</param>
-    /// <param name="username">The user name.</param>
+    /// <param name="userId">The user ID.</param>
     /// <param name="password">The password.</param>
     /// <param name="database">The database name.</param>
-    private static TemporaryDatabaseGuard FromParameters(
-        string host,
+    public static TemporaryDatabaseGuard FromParameters(
+        string server,
         ushort? port,
-        string username,
+        string userId,
         string password,
         string? database = default)
     {
-        var builder = new NpgsqlConnectionStringBuilder
+        var builder = new MySqlConnectionStringBuilder
         {
-            Host = host,
-            Username = username,
-            Password = password
+            Server = server,
+            UserID = userId,
+            Password = password,
+            Database = (database ?? string.Empty).Trim()
         };
         if (port.HasValue)
         {
             builder.Port = port.Value;
         }
-
-        if (string.IsNullOrWhiteSpace(database))
-        {
-            database = GenerateRandomDatabaseName();
-        }
-
-        builder.Database = database;
 
         return TemporaryDatabaseGuard.Create(builder.ToString());
     }

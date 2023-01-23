@@ -26,7 +26,7 @@ public sealed class TemporaryDatabaseGuard : TemporaryDatabaseGuardBase, IDispos
     /// </summary>
     public static TemporaryDatabaseGuard FromEnvironmentVariable(
         string variable,
-        TemporaryDatabaseGuardOptions? options = default) =>
+        CreateDatabaseOptions? options = default) =>
         TemporaryDatabaseGuard.FromConnectionString(
             Environment.GetEnvironmentVariable(variable) ?? string.Empty,
             options);
@@ -38,7 +38,7 @@ public sealed class TemporaryDatabaseGuard : TemporaryDatabaseGuardBase, IDispos
         string host,
         string username,
         string password,
-        TemporaryDatabaseGuardOptions? options) =>
+        CreateDatabaseOptions? options) =>
         TemporaryDatabaseGuard.FromParameters(host, port: null, username, password, options);
 
     /// <summary>
@@ -49,7 +49,7 @@ public sealed class TemporaryDatabaseGuard : TemporaryDatabaseGuardBase, IDispos
         ushort? port,
         string username,
         string password,
-        TemporaryDatabaseGuardOptions? options = default)
+        CreateDatabaseOptions? options = default)
     {
         var builder = new NpgsqlConnectionStringBuilder()
         {
@@ -69,9 +69,9 @@ public sealed class TemporaryDatabaseGuard : TemporaryDatabaseGuardBase, IDispos
     /// Factory method for creating a <see cref="TemporaryDatabaseGuard"/> instance.
     /// </summary>
     public static TemporaryDatabaseGuard FromConnectionString(string connectionString,
-        TemporaryDatabaseGuardOptions? options = default)
+        CreateDatabaseOptions? options = default)
     {
-        var validOptions = options ?? TemporaryDatabaseGuardOptions.Defaults;
+        var validOptions = options ?? CreateDatabaseOptions.Defaults;
 
         var builder = new NpgsqlConnectionStringBuilder(connectionString);
         var database = builder.Database;

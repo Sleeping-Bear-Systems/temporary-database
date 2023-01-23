@@ -3,7 +3,7 @@
 /// <summary>
 /// Temporary database guard configuration options.
 /// </summary>
-public sealed class TemporaryDatabaseGuardOptions
+public sealed class CreateDatabaseOptions
 {
     /// <summary>
     /// Prefix for the random database name.
@@ -13,7 +13,7 @@ public sealed class TemporaryDatabaseGuardOptions
     /// <summary>
     /// Default options.
     /// </summary>
-    public static readonly TemporaryDatabaseGuardOptions Defaults = new()
+    public static readonly CreateDatabaseOptions Defaults = new()
     {
         DatabasePrefix = "sbs_"
     };

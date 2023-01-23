@@ -24,7 +24,7 @@ public sealed class TemporaryDatabaseGuard : TemporaryDatabaseGuardBase, ITempor
     /// </summary>
     public static TemporaryDatabaseGuard FromEnvironmentVariable(
         string variable,
-        TemporaryDatabaseGuardOptions? options = default) =>
+        CreateDatabaseOptions? options = default) =>
         TemporaryDatabaseGuard.FromConnectionString(
             Environment.GetEnvironmentVariable(variable) ?? string.Empty,
             options);
@@ -36,7 +36,7 @@ public sealed class TemporaryDatabaseGuard : TemporaryDatabaseGuardBase, ITempor
         string server,
         string userId,
         string password,
-        TemporaryDatabaseGuardOptions? options = default) =>
+        CreateDatabaseOptions? options = default) =>
         TemporaryDatabaseGuard.FromParameters(server, null, userId, password, options);
 
     /// <summary>
@@ -47,7 +47,7 @@ public sealed class TemporaryDatabaseGuard : TemporaryDatabaseGuardBase, ITempor
         ushort? port,
         string userId,
         string password,
-        TemporaryDatabaseGuardOptions? options = default)
+        CreateDatabaseOptions? options = default)
     {
         var builder = new MySqlConnectionStringBuilder()
         {
@@ -68,9 +68,9 @@ public sealed class TemporaryDatabaseGuard : TemporaryDatabaseGuardBase, ITempor
     /// </summary>
     public static TemporaryDatabaseGuard FromConnectionString(
         string connectionString,
-        TemporaryDatabaseGuardOptions? options = default)
+        CreateDatabaseOptions? options = default)
     {
-        var validOptions = options ?? TemporaryDatabaseGuardOptions.Defaults;
+        var validOptions = options ?? CreateDatabaseOptions.Defaults;
 
         var builder = new MySqlConnectionStringBuilder(connectionString);
         var database = builder.Database;

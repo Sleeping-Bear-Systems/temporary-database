@@ -10,7 +10,7 @@ public static class TemporaryDatabaseGuardOptionsExtensions
     /// <summary>
     /// Generates a random database name.
     /// </summary>
-    public static string GenerateDatabaseName(this TemporaryDatabaseGuardOptions options)
+    public static string GenerateDatabaseName(this CreateDatabaseOptions options)
     {
         if (options is null)
         {

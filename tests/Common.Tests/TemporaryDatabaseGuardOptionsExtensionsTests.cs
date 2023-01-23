@@ -13,12 +13,12 @@ internal static class TemporaryDatabaseGuardOptionsExtensionsTests
         // use case: null options
         {
             var ex = Assert.Throws<ArgumentNullException>(() =>
-                default(TemporaryDatabaseGuardOptions)!.GenerateDatabaseName());
+                default(CreateDatabaseOptions)!.GenerateDatabaseName());
             Assert.That(ex!.ParamName, Is.EqualTo("options"));
         }
         // use case: null prefix
         {
-            var options = new TemporaryDatabaseGuardOptions() { DatabasePrefix = default };
+            var options = new CreateDatabaseOptions() { DatabasePrefix = default };
             var database = options.GenerateDatabaseName();
             Assert.Multiple(() =>
             {
@@ -28,7 +28,7 @@ internal static class TemporaryDatabaseGuardOptionsExtensionsTests
         }
         // use case: empty prefix
         {
-            var options = new TemporaryDatabaseGuardOptions() { DatabasePrefix = string.Empty };
+            var options = new CreateDatabaseOptions() { DatabasePrefix = string.Empty };
             var database = options.GenerateDatabaseName();
             Assert.Multiple(() =>
             {
@@ -38,7 +38,7 @@ internal static class TemporaryDatabaseGuardOptionsExtensionsTests
         }
         // use case: whitespace prefix
         {
-            var options = new TemporaryDatabaseGuardOptions() { DatabasePrefix = "   " };
+            var options = new CreateDatabaseOptions() { DatabasePrefix = "   " };
             var database = options.GenerateDatabaseName();
             Assert.Multiple(() =>
             {
@@ -50,7 +50,7 @@ internal static class TemporaryDatabaseGuardOptionsExtensionsTests
         // use case: valid prefix
         {
             const string prefix = "prefix_";
-            var options = new TemporaryDatabaseGuardOptions() { DatabasePrefix = prefix };
+            var options = new CreateDatabaseOptions() { DatabasePrefix = prefix };
             var database = options.GenerateDatabaseName();
             Assert.Multiple(() =>
             {

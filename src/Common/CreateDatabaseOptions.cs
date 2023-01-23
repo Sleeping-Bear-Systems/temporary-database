@@ -3,18 +3,18 @@
 /// <summary>
 /// Temporary database guard configuration options.
 /// </summary>
-public sealed class TemporaryDatabaseGuardOptions
+public sealed class CreateDatabaseOptions
 {
     /// <summary>
-    /// Prefix for the random database name.
+    /// Database collation.
     /// </summary>
-    public string? DatabasePrefix { get; init; }
+    public string? Collation { get; init; }
 
     /// <summary>
     /// Default options.
     /// </summary>
-    public static readonly TemporaryDatabaseGuardOptions Defaults = new()
+    public static readonly CreateDatabaseOptions Defaults = new()
     {
-        DatabasePrefix = "sbs_"
+        Collation = default
     };
 }

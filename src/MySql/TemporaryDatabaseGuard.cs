@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using MySql.Data.MySqlClient;
+﻿using MySql.Data.MySqlClient;
 using SleepingBearSystems.TemporaryDatabase.Common;
 
 namespace SleepingBearSystems.TemporaryDatabase.MySql;
@@ -9,48 +8,78 @@ namespace SleepingBearSystems.TemporaryDatabase.MySql;
 /// </summary>
 public sealed class TemporaryDatabaseGuard : TemporaryDatabaseGuardBase, ITemporaryDatabaseGuard
 {
-    private TemporaryDatabaseGuard(string database, string connectionString, string masterConnectionString)
-        : base(database, connectionString, masterConnectionString)
+    private TemporaryDatabaseGuard(CreateDatabaseResult result)
+        : base(result)
     {
     }
 
     /// <inheritdoc cref="IDisposable"/>
     public void Dispose()
     {
-        using var connection = new MySqlConnection(this.MasterConnectionString);
-        connection.Open();
-        var cmdText = string.Format(
-            CultureInfo.InvariantCulture,
-            "DROP DATABASE IF EXISTS {0};",
-            this.Database);
-        using var command = new MySqlCommand(cmdText, connection);
-        command.ExecuteNonQuery();
+        MySqlHelper.DropDatabase(this.Result);
     }
 
     /// <summary>
     /// Factory method for creating a <see cref="TemporaryDatabaseGuard"/> instance.
     /// </summary>
-    public static TemporaryDatabaseGuard Create(string connectionString, TemporaryDatabaseGuardOptions? options = default)
-    {
-        var validOptions = options ?? TemporaryDatabaseGuardOptions.Defaults;
+    public static TemporaryDatabaseGuard FromEnvironmentVariable(
+        string variable,
+        string? prefix = default,
+        CreateDatabaseOptions? options = default) =>
+        FromConnectionString(
+            Environment.GetEnvironmentVariable(variable) ?? string.Empty,
+            prefix,
+            options);
 
-        var builder = new MySqlConnectionStringBuilder(connectionString);
-        var database = builder.Database;
-        if (string.IsNullOrWhiteSpace(database))
+    /// <summary>
+    /// Factory method for creating a <see cref="TemporaryDatabaseGuard"/> instance.
+    /// </summary>
+    public static TemporaryDatabaseGuard FromParameters(
+        string server,
+        string userId,
+        string password,
+        string? prefix = default,
+        CreateDatabaseOptions? options = default) =>
+        FromParameters(server, null, userId, password, prefix, options);
+
+    /// <summary>
+    /// Factory method for creating a <see cref="TemporaryDatabaseGuard"/> instance.
+    /// </summary>
+    public static TemporaryDatabaseGuard FromParameters(
+        string server,
+        ushort? port,
+        string userId,
+        string password,
+        string? prefix = default,
+        CreateDatabaseOptions? options = default)
+    {
+        var builder = new MySqlConnectionStringBuilder
         {
-            database = validOptions.GenerateDatabaseName();
+            Server = server,
+            UserID = userId,
+            Password = password
+        };
+        if (port.HasValue)
+        {
+            builder.Port = port.Value;
         }
 
-        builder.Database = "mysql";
-        var masterConnectionString = builder.ToString();
+        return FromConnectionString(builder.ToString(), prefix, options);
+    }
 
-        using var connection = new MySqlConnection(masterConnectionString);
-        connection.Open();
+    /// <summary>
+    /// Factory method for creating a <see cref="TemporaryDatabaseGuard"/> instance.
+    /// </summary>
+    public static TemporaryDatabaseGuard FromConnectionString(
+        string connectionString,
+        string? prefix = default,
+        CreateDatabaseOptions? options = default)
+    {
+        var result = MySqlHelper.CreateDatabase(
+            connectionString,
+            DatabaseHelper.GenerateDatabaseName(prefix),
+            options ?? CreateDatabaseOptions.Defaults);
 
-        var cmdText = string.Format(CultureInfo.InvariantCulture, "CREATE DATABASE {0};", database);
-        using var command = new MySqlCommand(cmdText, connection);
-        command.ExecuteNonQuery();
-
-        return new TemporaryDatabaseGuard(database, connectionString, masterConnectionString);
+        return new TemporaryDatabaseGuard(result);
     }
 }

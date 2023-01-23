@@ -13,9 +13,12 @@ internal static class TemporaryDatabaseGuardTests
         var guard = TemporaryDatabaseGuard.FromEnvironmentVariable(TestServerEnvironmentVariable);
         using (guard)
         {
-            Assert.That(MySqlHelper.CheckDatabaseExists(guard.Result.MasterConnectionString, guard.Result.Database), Is.True);
+            Assert.That(MySqlHelper.CheckDatabaseExists(guard.Result.MasterConnectionString, guard.Result.Database),
+                Is.True);
         }
-        Assert.That(MySqlHelper.CheckDatabaseExists(guard.Result.MasterConnectionString, guard.Result.Database), Is.False);
+
+        Assert.That(MySqlHelper.CheckDatabaseExists(guard.Result.MasterConnectionString, guard.Result.Database),
+            Is.False);
     }
 
     [Test]
@@ -31,9 +34,12 @@ internal static class TemporaryDatabaseGuardTests
             builder.Password!);
         using (guard)
         {
-            Assert.That(MySqlHelper.CheckDatabaseExists(guard.Result.MasterConnectionString, guard.Result.Database), Is.True);
+            Assert.That(MySqlHelper.CheckDatabaseExists(guard.Result.MasterConnectionString, guard.Result.Database),
+                Is.True);
         }
-        Assert.That(MySqlHelper.CheckDatabaseExists(guard.Result.MasterConnectionString, guard.Result.Database), Is.False);
+
+        Assert.That(MySqlHelper.CheckDatabaseExists(guard.Result.MasterConnectionString, guard.Result.Database),
+            Is.False);
     }
 
     [Test]
@@ -44,9 +50,12 @@ internal static class TemporaryDatabaseGuardTests
         var guard = TemporaryDatabaseGuard.FromConnectionString(connectionString!);
         using (guard)
         {
-            Assert.That(MySqlHelper.CheckDatabaseExists(guard.Result.MasterConnectionString, guard.Result.Database), Is.True);
+            Assert.That(MySqlHelper.CheckDatabaseExists(guard.Result.MasterConnectionString, guard.Result.Database),
+                Is.True);
         }
-        Assert.That(MySqlHelper.CheckDatabaseExists(guard.Result.MasterConnectionString, guard.Result.Database), Is.False);
+
+        Assert.That(MySqlHelper.CheckDatabaseExists(guard.Result.MasterConnectionString, guard.Result.Database),
+            Is.False);
     }
 
     private const string TestServerEnvironmentVariable = "SBS_TEST_SERVER_MYSQL";

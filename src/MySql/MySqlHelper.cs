@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Text;
 using MySql.Data.MySqlClient;
 using SleepingBearSystems.TemporaryDatabase.Common;
 
@@ -17,12 +18,20 @@ public static class MySqlHelper
         string database,
         CreateDatabaseOptions? options = default)
     {
+        var validOptions = options ?? CreateDatabaseOptions.Defaults;
         var masterConnectionString = GetMasterConnectionString(connectionString);
         using var connection = new MySqlConnection(masterConnectionString);
         connection.Open();
 
-        var cmdText = string.Format(CultureInfo.InvariantCulture, "CREATE DATABASE {0};", database);
-        using var command = new MySqlCommand(cmdText, connection);
+        var builder = new StringBuilder()
+            .Append(CultureInfo.InvariantCulture, $"CREATE DATABASE {database}");
+        if (!string.IsNullOrWhiteSpace(validOptions.Collation))
+        {
+            builder.Append(CultureInfo.InvariantCulture, $" COLLATE {validOptions.Collation}");
+        }
+
+        builder.Append(';');
+        using var command = new MySqlCommand(builder.ToString(), connection);
         command.ExecuteNonQuery();
         return new CreateDatabaseResult(masterConnectionString, connectionString, database);
     }
@@ -59,6 +68,7 @@ public static class MySqlHelper
 
         return databases.Contains(database, ignoreCase ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal);
     }
+
     /// <summary>
     /// Gets the master database connection string.
     /// </summary>

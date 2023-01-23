@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Text;
 using Npgsql;
 using SleepingBearSystems.TemporaryDatabase.Common;
 
@@ -17,12 +18,20 @@ public static class PostgresHelper
         string database,
         CreateDatabaseOptions? options = default)
     {
+        var validOptions = options ?? CreateDatabaseOptions.Defaults;
         var masterConnectionString = GetMasterConnectionString(connectionString);
         using var connection = new NpgsqlConnection(masterConnectionString);
         connection.Open();
 
-        var cmdText = string.Format(CultureInfo.InvariantCulture, "CREATE DATABASE {0};", database);
-        using var command = new NpgsqlCommand(cmdText, connection);
+        var builder = new StringBuilder()
+            .Append(CultureInfo.InvariantCulture, $"CREATE DATABASE {database}");
+        if (!string.IsNullOrWhiteSpace(validOptions.Collation))
+        {
+            builder.Append(CultureInfo.InvariantCulture, $" COLLATE {validOptions.Collation}");
+        }
+
+        builder.Append(';');
+        using var command = new NpgsqlCommand(builder.ToString(), connection);
         command.ExecuteNonQuery();
         return new CreateDatabaseResult(masterConnectionString, connectionString, database);
     }
@@ -49,6 +58,7 @@ public static class PostgresHelper
     {
         using var connection = new NpgsqlConnection(masterConnectionString);
         connection.Open();
+        // ReSharper disable once StringLiteralTypo
         using var command = new NpgsqlCommand("SELECT datname FROM pg_database", connection);
         using var reader = command.ExecuteReader();
         var databases = new List<string>();

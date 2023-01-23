@@ -43,6 +43,23 @@ public static class MySqlHelper
     }
 
     /// <summary>
+    /// Checks if a database exists.
+    /// </summary>
+    public static bool CheckDatabaseExists(string masterConnectionString, string database, bool ignoreCase = true)
+    {
+        using var connection = new MySqlConnection(masterConnectionString);
+        connection.Open();
+        using var command = new MySqlCommand("SHOW DATABASES;", connection);
+        using var reader = command.ExecuteReader();
+        var databases = new List<string>();
+        while (reader.Read())
+        {
+            databases.Add(reader.GetString(0));
+        }
+
+        return databases.Contains(database, ignoreCase ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal);
+    }
+    /// <summary>
     /// Gets the master database connection string.
     /// </summary>
     private static string GetMasterConnectionString(string connectionString) =>

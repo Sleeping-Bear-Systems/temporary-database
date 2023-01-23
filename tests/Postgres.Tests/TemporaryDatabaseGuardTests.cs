@@ -10,8 +10,12 @@ internal static class TemporaryDatabaseGuardTests
     [Test]
     public static void FromEnvironmentVariable_ValidatesBehavior()
     {
-        using var guard = TemporaryDatabaseGuard.FromEnvironmentVariable(TestServerEnvironmentVariable);
-        CheckDatabaseExists(guard.Result.ConnectionString);
+        var guard = TemporaryDatabaseGuard.FromEnvironmentVariable(TestServerEnvironmentVariable);
+        using (guard)
+        {
+            Assert.That(PostgresHelper.CheckDatabaseExists(guard.Result.MasterConnectionString, guard.Result.Database), Is.True);
+        }
+        Assert.That(PostgresHelper.CheckDatabaseExists(guard.Result.MasterConnectionString, guard.Result.Database), Is.False);
     }
 
     [Test]
@@ -20,13 +24,17 @@ internal static class TemporaryDatabaseGuardTests
         var connectionString = Environment.GetEnvironmentVariable(TestServerEnvironmentVariable);
         var builder = new NpgsqlConnectionStringBuilder(connectionString);
 
-        using var guard =
+        var guard =
             TemporaryDatabaseGuard.FromParameters(
                 builder.Host!,
                 (ushort)builder.Port,
                 builder.Username!,
                 builder.Password!);
-        CheckDatabaseExists(guard.Result.ConnectionString);
+        using (guard)
+        {
+            Assert.That(PostgresHelper.CheckDatabaseExists(guard.Result.MasterConnectionString, guard.Result.Database), Is.True);
+        }
+        Assert.That(PostgresHelper.CheckDatabaseExists(guard.Result.MasterConnectionString, guard.Result.Database), Is.False);
     }
 
     [Test]
@@ -34,14 +42,12 @@ internal static class TemporaryDatabaseGuardTests
     {
         var connectionString = Environment.GetEnvironmentVariable(TestServerEnvironmentVariable);
 
-        using var guard = TemporaryDatabaseGuard.FromConnectionString(connectionString!);
-        CheckDatabaseExists(guard.Result.ConnectionString);
-    }
-
-    private static void CheckDatabaseExists(string connectionString)
-    {
-        using var connection = new NpgsqlConnection(connectionString);
-        connection.Open();
+        var guard = TemporaryDatabaseGuard.FromConnectionString(connectionString!);
+        using (guard)
+        {
+            Assert.That(PostgresHelper.CheckDatabaseExists(guard.Result.MasterConnectionString, guard.Result.Database), Is.True);
+        }
+        Assert.That(PostgresHelper.CheckDatabaseExists(guard.Result.MasterConnectionString, guard.Result.Database), Is.False);
     }
 
     private const string TestServerEnvironmentVariable = "SBS_TEST_SERVER_POSTGRES";

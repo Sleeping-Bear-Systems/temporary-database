@@ -10,8 +10,12 @@ internal static class TemporaryDatabaseGuardTests
     [Test]
     public static void FromEnvironmentVariable_ValidatesBehavior()
     {
-        using var guard = TemporaryDatabaseGuard.FromEnvironmentVariable(TestServerEnvironmentVariable);
-        CheckDatabaseExists(guard.Result.ConnectionString);
+        var guard = TemporaryDatabaseGuard.FromEnvironmentVariable(TestServerEnvironmentVariable);
+        using (guard)
+        {
+            Assert.That(MySqlHelper.CheckDatabaseExists(guard.Result.MasterConnectionString, guard.Result.Database), Is.True);
+        }
+        Assert.That(MySqlHelper.CheckDatabaseExists(guard.Result.MasterConnectionString, guard.Result.Database), Is.False);
     }
 
     [Test]
@@ -20,12 +24,16 @@ internal static class TemporaryDatabaseGuardTests
         var connectionString = Environment.GetEnvironmentVariable(TestServerEnvironmentVariable);
         var builder = new MySqlConnectionStringBuilder(connectionString);
 
-        using var guard = TemporaryDatabaseGuard.FromParameters(
+        var guard = TemporaryDatabaseGuard.FromParameters(
             builder.Server!,
             (ushort)builder.Port,
             builder.UserID!,
             builder.Password!);
-        CheckDatabaseExists(guard.Result.ConnectionString);
+        using (guard)
+        {
+            Assert.That(MySqlHelper.CheckDatabaseExists(guard.Result.MasterConnectionString, guard.Result.Database), Is.True);
+        }
+        Assert.That(MySqlHelper.CheckDatabaseExists(guard.Result.MasterConnectionString, guard.Result.Database), Is.False);
     }
 
     [Test]
@@ -33,14 +41,12 @@ internal static class TemporaryDatabaseGuardTests
     {
         var connectionString = Environment.GetEnvironmentVariable(TestServerEnvironmentVariable);
 
-        using var guard = TemporaryDatabaseGuard.FromConnectionString(connectionString!);
-        CheckDatabaseExists(guard.Result.ConnectionString);
-    }
-
-    private static void CheckDatabaseExists(string connectionString)
-    {
-        using var connection = new MySqlConnection(connectionString);
-        connection.Open();
+        var guard = TemporaryDatabaseGuard.FromConnectionString(connectionString!);
+        using (guard)
+        {
+            Assert.That(MySqlHelper.CheckDatabaseExists(guard.Result.MasterConnectionString, guard.Result.Database), Is.True);
+        }
+        Assert.That(MySqlHelper.CheckDatabaseExists(guard.Result.MasterConnectionString, guard.Result.Database), Is.False);
     }
 
     private const string TestServerEnvironmentVariable = "SBS_TEST_SERVER_MYSQL";

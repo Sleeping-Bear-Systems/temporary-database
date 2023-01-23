@@ -29,6 +29,15 @@ internal static class TemporaryDatabaseGuardTests
         CheckDatabaseExists(guard.Result.ConnectionString);
     }
 
+    [Test]
+    public static void FromConnectionString_ValidatesBehavior()
+    {
+        var connectionString = Environment.GetEnvironmentVariable(TestServerEnvironmentVariable);
+
+        using var guard = TemporaryDatabaseGuard.FromConnectionString(connectionString!);
+        CheckDatabaseExists(guard.Result.ConnectionString);
+    }
+
     private static void CheckDatabaseExists(string connectionString)
     {
         using var connection = new NpgsqlConnection(connectionString);

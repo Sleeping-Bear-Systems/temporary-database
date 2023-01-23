@@ -26,7 +26,7 @@ public sealed class TemporaryDatabaseGuard : TemporaryDatabaseGuardBase, ITempor
         string variable,
         string? prefix = default,
         CreateDatabaseOptions? options = default) =>
-        TemporaryDatabaseGuard.FromConnectionString(
+        FromConnectionString(
             Environment.GetEnvironmentVariable(variable) ?? string.Empty,
             prefix,
             options);
@@ -40,7 +40,7 @@ public sealed class TemporaryDatabaseGuard : TemporaryDatabaseGuardBase, ITempor
         string password,
         string? prefix = default,
         CreateDatabaseOptions? options = default) =>
-        TemporaryDatabaseGuard.FromParameters(server, null, userId, password, prefix, options);
+        FromParameters(server, null, userId, password, prefix, options);
 
     /// <summary>
     /// Factory method for creating a <see cref="TemporaryDatabaseGuard"/> instance.
@@ -53,7 +53,7 @@ public sealed class TemporaryDatabaseGuard : TemporaryDatabaseGuardBase, ITempor
         string? prefix = default,
         CreateDatabaseOptions? options = default)
     {
-        var builder = new MySqlConnectionStringBuilder()
+        var builder = new MySqlConnectionStringBuilder
         {
             Server = server,
             UserID = userId,

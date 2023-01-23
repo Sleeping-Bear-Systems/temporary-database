@@ -17,5 +17,4 @@ public abstract class TemporaryDatabaseGuardBase
     /// Gets the create database result.
     /// </summary>
     public CreateDatabaseResult Result { get; }
-
 }

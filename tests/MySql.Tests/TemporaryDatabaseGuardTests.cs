@@ -20,9 +20,20 @@ internal static class TemporaryDatabaseGuardTests
         var connectionString = Environment.GetEnvironmentVariable(TestServerEnvironmentVariable);
         var builder = new MySqlConnectionStringBuilder(connectionString);
 
-        using var guard =
-            TemporaryDatabaseGuard.FromParameters(builder.Server!, (ushort)builder.Port, builder.UserID!,
-                builder.Password!);
+        using var guard = TemporaryDatabaseGuard.FromParameters(
+            builder.Server!,
+            (ushort)builder.Port,
+            builder.UserID!,
+            builder.Password!);
+        CheckDatabaseExists(guard.Result.ConnectionString);
+    }
+
+    [Test]
+    public static void FromConnectionString_ValidatesBehavior()
+    {
+        var connectionString = Environment.GetEnvironmentVariable(TestServerEnvironmentVariable);
+
+        using var guard = TemporaryDatabaseGuard.FromConnectionString(connectionString!);
         CheckDatabaseExists(guard.Result.ConnectionString);
     }
 

@@ -12,7 +12,10 @@ public static class PostgresHelper
     /// <summary>
     /// Creates a Postgres database.
     /// </summary>
-    public static CreateDatabaseResult CreateDatabase(string connectionString, string database, CreateDatabaseOptions? options = default)
+    public static CreateDatabaseResult CreateDatabase(
+        string connectionString,
+        string database,
+        CreateDatabaseOptions? options = default)
     {
         var masterConnectionString = GetMasterConnectionString(connectionString);
         using var connection = new NpgsqlConnection(masterConnectionString);
@@ -21,12 +24,7 @@ public static class PostgresHelper
         var cmdText = string.Format(CultureInfo.InvariantCulture, "CREATE DATABASE {0};", database);
         using var command = new NpgsqlCommand(cmdText, connection);
         command.ExecuteNonQuery();
-        return new CreateDatabaseResult
-        {
-            MasterConnectionString = masterConnectionString,
-            ConnectionString = connectionString,
-            Database = database
-        };
+        return new CreateDatabaseResult(masterConnectionString, connectionString, database);
     }
 
     /// <summary>
@@ -44,6 +42,9 @@ public static class PostgresHelper
         command.ExecuteNonQuery();
     }
 
+    /// <summary>
+    /// Gets the master database connection string.
+    /// </summary>
     private static string GetMasterConnectionString(string connectionString) =>
         new NpgsqlConnectionStringBuilder(connectionString)
         {

@@ -24,12 +24,7 @@ public static class MySqlHelper
         var cmdText = string.Format(CultureInfo.InvariantCulture, "CREATE DATABASE {0};", database);
         using var command = new MySqlCommand(cmdText, connection);
         command.ExecuteNonQuery();
-        return new CreateDatabaseResult
-        {
-            MasterConnectionString = masterConnectionString,
-            ConnectionString = connectionString,
-            Database = database
-        };
+        return new CreateDatabaseResult(masterConnectionString, connectionString, database);
     }
 
     /// <summary>
@@ -47,7 +42,10 @@ public static class MySqlHelper
         command.ExecuteNonQuery();
     }
 
-    public static string GetMasterConnectionString(string connectionString) =>
+    /// <summary>
+    /// Gets the master database connection string.
+    /// </summary>
+    private static string GetMasterConnectionString(string connectionString) =>
         new MySqlConnectionStringBuilder(connectionString)
         {
             Database = "mysql"

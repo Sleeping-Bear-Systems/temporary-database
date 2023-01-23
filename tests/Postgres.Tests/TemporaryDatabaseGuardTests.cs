@@ -3,14 +3,14 @@
 namespace SleepingBearSystems.TemporaryDatabase.Postgres.Tests;
 
 /// <summary>
-/// Tests for <see cref="Helper"/>.
+/// Tests for <see cref="TemporaryDatabaseGuard"/>.
 /// </summary>
-internal static class HelperTests
+internal static class TemporaryDatabaseGuardTests
 {
     [Test]
     public static void FromEnvironmentVariable_ValidatesBehavior()
     {
-        using var guard = Helper.FromEnvironmentVariable(TestServerEnvironmentVariable);
+        using var guard = TemporaryDatabaseGuard.FromEnvironmentVariable(TestServerEnvironmentVariable);
         CheckDatabaseExists(guard.ConnectionString);
     }
 
@@ -21,7 +21,11 @@ internal static class HelperTests
         var builder = new NpgsqlConnectionStringBuilder(connectionString);
 
         using var guard =
-            Helper.FromParameters(builder.Host!, (ushort)builder.Port, builder.Username!, builder.Password!);
+            TemporaryDatabaseGuard.FromParameters(
+                builder.Host!,
+                (ushort)builder.Port,
+                builder.Username!,
+                builder.Password!);
         CheckDatabaseExists(guard.ConnectionString);
     }
 

@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using MySql.Data.MySqlClient;
+﻿using MySql.Data.MySqlClient;
 using SleepingBearSystems.TemporaryDatabase.Common;
 
 namespace SleepingBearSystems.TemporaryDatabase.MySql;
@@ -17,20 +16,59 @@ public sealed class TemporaryDatabaseGuard : TemporaryDatabaseGuardBase, ITempor
     /// <inheritdoc cref="IDisposable"/>
     public void Dispose()
     {
-        using var connection = new MySqlConnection(this.MasterConnectionString);
-        connection.Open();
-        var cmdText = string.Format(
-            CultureInfo.InvariantCulture,
-            "DROP DATABASE IF EXISTS {0};",
-            this.Database);
-        using var command = new MySqlCommand(cmdText, connection);
-        command.ExecuteNonQuery();
+        MySqlHelper.DropDatabase(this.MasterConnectionString, this.Database);
     }
 
     /// <summary>
     /// Factory method for creating a <see cref="TemporaryDatabaseGuard"/> instance.
     /// </summary>
-    public static TemporaryDatabaseGuard Create(string connectionString, TemporaryDatabaseGuardOptions? options = default)
+    public static TemporaryDatabaseGuard FromEnvironmentVariable(
+        string variable,
+        TemporaryDatabaseGuardOptions? options = default) =>
+        TemporaryDatabaseGuard.FromConnectionString(
+            Environment.GetEnvironmentVariable(variable) ?? string.Empty,
+            options);
+
+    /// <summary>
+    /// Factory method for creating a <see cref="TemporaryDatabaseGuard"/> instance.
+    /// </summary>
+    public static TemporaryDatabaseGuard FromParameters(
+        string server,
+        string userId,
+        string password,
+        TemporaryDatabaseGuardOptions? options = default) =>
+        TemporaryDatabaseGuard.FromParameters(server, null, userId, password, options);
+
+    /// <summary>
+    /// Factory method for creating a <see cref="TemporaryDatabaseGuard"/> instance.
+    /// </summary>
+    public static TemporaryDatabaseGuard FromParameters(
+        string server,
+        ushort? port,
+        string userId,
+        string password,
+        TemporaryDatabaseGuardOptions? options = default)
+    {
+        var builder = new MySqlConnectionStringBuilder()
+        {
+            Server = server,
+            UserID = userId,
+            Password = password
+        };
+        if (port.HasValue)
+        {
+            builder.Port = port.Value;
+        }
+
+        return FromConnectionString(builder.ToString(), options);
+    }
+
+    /// <summary>
+    /// Factory method for creating a <see cref="TemporaryDatabaseGuard"/> instance.
+    /// </summary>
+    public static TemporaryDatabaseGuard FromConnectionString(
+        string connectionString,
+        TemporaryDatabaseGuardOptions? options = default)
     {
         var validOptions = options ?? TemporaryDatabaseGuardOptions.Defaults;
 
@@ -44,12 +82,7 @@ public sealed class TemporaryDatabaseGuard : TemporaryDatabaseGuardBase, ITempor
         builder.Database = "mysql";
         var masterConnectionString = builder.ToString();
 
-        using var connection = new MySqlConnection(masterConnectionString);
-        connection.Open();
-
-        var cmdText = string.Format(CultureInfo.InvariantCulture, "CREATE DATABASE {0};", database);
-        using var command = new MySqlCommand(cmdText, connection);
-        command.ExecuteNonQuery();
+        MySqlHelper.CreateDatabase(masterConnectionString, database);
 
         return new TemporaryDatabaseGuard(database, connectionString, masterConnectionString);
     }

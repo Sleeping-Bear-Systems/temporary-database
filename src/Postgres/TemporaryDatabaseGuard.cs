@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Reflection;
 using Npgsql;
 using SleepingBearSystems.TemporaryDatabase.Common;
 
@@ -17,20 +18,58 @@ public sealed class TemporaryDatabaseGuard : TemporaryDatabaseGuardBase, IDispos
     /// <inheritdoc cref="IDisposable"/>
     public void Dispose()
     {
-        using var connection = new NpgsqlConnection(this.MasterConnectionString);
-        connection.Open();
-        var cmdText = string.Format(
-            CultureInfo.InvariantCulture,
-            "DROP DATABASE IF EXISTS {0} WITH (FORCE);",
-            this.Database);
-        using var command = new NpgsqlCommand(cmdText, connection);
-        command.ExecuteNonQuery();
+        PostgresHelper.DropDatabase(this.MasterConnectionString, this.Database);
     }
 
     /// <summary>
     /// Factory method for creating a <see cref="TemporaryDatabaseGuard"/> instance.
     /// </summary>
-    public static TemporaryDatabaseGuard Create(string connectionString, TemporaryDatabaseGuardOptions? options = default)
+    public static TemporaryDatabaseGuard FromEnvironmentVariable(
+        string variable,
+        TemporaryDatabaseGuardOptions? options = default) =>
+        TemporaryDatabaseGuard.FromConnectionString(
+            Environment.GetEnvironmentVariable(variable) ?? string.Empty,
+            options);
+
+    /// <summary>
+    /// Factory method for creating a <see cref="TemporaryDatabaseGuard"/> instance.
+    /// </summary>
+    public static TemporaryDatabaseGuard FromParameters(
+        string host,
+        string username,
+        string password,
+        TemporaryDatabaseGuardOptions? options) =>
+        TemporaryDatabaseGuard.FromParameters(host, port: null, username, password, options);
+
+    /// <summary>
+    /// Factory method for creating a <see cref="TemporaryDatabaseGuard"/> instance.
+    /// </summary>
+    public static TemporaryDatabaseGuard FromParameters(
+        string host,
+        ushort? port,
+        string username,
+        string password,
+        TemporaryDatabaseGuardOptions? options = default)
+    {
+        var builder = new NpgsqlConnectionStringBuilder()
+        {
+            Host = host,
+            Username = username,
+            Password = password
+        };
+        if (port.HasValue)
+        {
+            builder.Port = port.Value;
+        }
+
+        return FromConnectionString(builder.ToString(), options);
+    }
+
+    /// <summary>
+    /// Factory method for creating a <see cref="TemporaryDatabaseGuard"/> instance.
+    /// </summary>
+    public static TemporaryDatabaseGuard FromConnectionString(string connectionString,
+        TemporaryDatabaseGuardOptions? options = default)
     {
         var validOptions = options ?? TemporaryDatabaseGuardOptions.Defaults;
 
@@ -44,12 +83,7 @@ public sealed class TemporaryDatabaseGuard : TemporaryDatabaseGuardBase, IDispos
         builder.Database = "postgres";
         var masterConnectionString = builder.ToString();
 
-        using var connection = new NpgsqlConnection(masterConnectionString);
-        connection.Open();
-
-        var cmdText = string.Format(CultureInfo.InvariantCulture, "CREATE DATABASE {0};", database);
-        using var command = new NpgsqlCommand(cmdText, connection);
-        command.ExecuteNonQuery();
+        PostgresHelper.CreateDatabase(masterConnectionString, database);
 
         return new TemporaryDatabaseGuard(database, connectionString, masterConnectionString);
     }

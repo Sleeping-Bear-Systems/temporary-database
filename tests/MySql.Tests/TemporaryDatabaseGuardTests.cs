@@ -3,14 +3,14 @@
 namespace SleepingBearSystems.TemporaryDatabase.MySql.Tests;
 
 /// <summary>
-/// Tests for <see cref="Helper"/>.
+/// Tests for <see cref="TemporaryDatabaseGuard"/>.
 /// </summary>
-internal static class HelperTests
+internal static class TemporaryDatabaseGuardTests
 {
     [Test]
     public static void FromEnvironmentVariable_ValidatesBehavior()
     {
-        using var guard = Helper.FromEnvironmentVariable(TestServerEnvironmentVariable);
+        using var guard = TemporaryDatabaseGuard.FromEnvironmentVariable(TestServerEnvironmentVariable);
         CheckDatabaseExists(guard.ConnectionString);
     }
 
@@ -21,7 +21,8 @@ internal static class HelperTests
         var builder = new MySqlConnectionStringBuilder(connectionString);
 
         using var guard =
-            Helper.FromParameters(builder.Server!, (ushort)builder.Port, builder.UserID!, builder.Password!);
+            TemporaryDatabaseGuard.FromParameters(builder.Server!, (ushort)builder.Port, builder.UserID!,
+                builder.Password!);
         CheckDatabaseExists(guard.ConnectionString);
     }
 

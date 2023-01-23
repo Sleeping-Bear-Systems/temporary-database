@@ -59,8 +59,6 @@ internal static class TemporaryDatabaseGuardOptionsExtensionsTests
                 Assert.That(GuidRegex.IsMatch(database), Is.True);
             });
         }
-
-
     }
 
     private static readonly Regex GuidRegex = new("[a-f0-9]{32}");

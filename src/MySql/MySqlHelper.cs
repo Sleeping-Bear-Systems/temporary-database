@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using MySql.Data.MySqlClient;
+using SleepingBearSystems.TemporaryDatabase.Common;
 
 namespace SleepingBearSystems.TemporaryDatabase.MySql;
 
@@ -11,28 +12,44 @@ public static class MySqlHelper
     /// <summary>
     /// Creates a MySQL database.
     /// </summary>
-    public static void CreateDatabase(string connectionString, string database)
+    public static CreateDatabaseResult CreateDatabase(
+        string connectionString,
+        string database,
+        CreateDatabaseOptions? options = default)
     {
-        using var connection = new MySqlConnection(connectionString);
+        var masterConnectionString = GetMasterConnectionString(connectionString);
+        using var connection = new MySqlConnection(masterConnectionString);
         connection.Open();
 
         var cmdText = string.Format(CultureInfo.InvariantCulture, "CREATE DATABASE {0};", database);
         using var command = new MySqlCommand(cmdText, connection);
         command.ExecuteNonQuery();
+        return new CreateDatabaseResult
+        {
+            MasterConnectionString = masterConnectionString,
+            ConnectionString = connectionString,
+            Database = database
+        };
     }
 
     /// <summary>
     /// Drops a MySQL database.
     /// </summary>
-    public static void DropDatabase(string connectionString, string database)
+    public static void DropDatabase(CreateDatabaseResult result)
     {
-        using var connection = new MySqlConnection(connectionString);
+        using var connection = new MySqlConnection(result.MasterConnectionString);
         connection.Open();
         var cmdText = string.Format(
             CultureInfo.InvariantCulture,
             "DROP DATABASE IF EXISTS {0};",
-            database);
+            result.Database);
         using var command = new MySqlCommand(cmdText, connection);
         command.ExecuteNonQuery();
     }
+
+    public static string GetMasterConnectionString(string connectionString) =>
+        new MySqlConnectionStringBuilder(connectionString)
+        {
+            Database = "mysql"
+        }.ToString();
 }

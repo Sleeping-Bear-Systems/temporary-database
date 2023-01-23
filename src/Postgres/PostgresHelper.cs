@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using Npgsql;
+using SleepingBearSystems.TemporaryDatabase.Common;
 
 namespace SleepingBearSystems.TemporaryDatabase.Postgres;
 
@@ -11,28 +12,41 @@ public static class PostgresHelper
     /// <summary>
     /// Creates a Postgres database.
     /// </summary>
-    public static void CreateDatabase(string connectionString, string database)
+    public static CreateDatabaseResult CreateDatabase(string connectionString, string database, CreateDatabaseOptions? options = default)
     {
-        using var connection = new NpgsqlConnection(connectionString);
+        var masterConnectionString = GetMasterConnectionString(connectionString);
+        using var connection = new NpgsqlConnection(masterConnectionString);
         connection.Open();
 
         var cmdText = string.Format(CultureInfo.InvariantCulture, "CREATE DATABASE {0};", database);
         using var command = new NpgsqlCommand(cmdText, connection);
         command.ExecuteNonQuery();
+        return new CreateDatabaseResult
+        {
+            MasterConnectionString = masterConnectionString,
+            ConnectionString = connectionString,
+            Database = database
+        };
     }
 
     /// <summary>
     /// Drops a Postgres database.
     /// </summary>
-    public static void DropDatabase(string connectionString, string database)
+    public static void DropDatabase(CreateDatabaseResult result)
     {
-        using var connection = new NpgsqlConnection(connectionString);
+        using var connection = new NpgsqlConnection(result.MasterConnectionString);
         connection.Open();
         var cmdText = string.Format(
             CultureInfo.InvariantCulture,
             "DROP DATABASE IF EXISTS {0} WITH (FORCE);",
-            database);
+            result.Database);
         using var command = new NpgsqlCommand(cmdText, connection);
         command.ExecuteNonQuery();
     }
+
+    private static string GetMasterConnectionString(string connectionString) =>
+        new NpgsqlConnectionStringBuilder(connectionString)
+        {
+            Database = "postgres"
+        }.ToString();
 }

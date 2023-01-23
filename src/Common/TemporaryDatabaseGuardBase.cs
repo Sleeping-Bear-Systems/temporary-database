@@ -8,25 +8,14 @@ public abstract class TemporaryDatabaseGuardBase
     /// <summary>
     /// Constructor
     /// </summary>
-    protected TemporaryDatabaseGuardBase(string database, string connectionString, string masterConnectionString)
+    protected TemporaryDatabaseGuardBase(CreateDatabaseResult result)
     {
-        this.Database = database;
-        this.ConnectionString = connectionString;
-        this.MasterConnectionString = masterConnectionString;
+        this.Result = result ?? throw new ArgumentNullException(nameof(result));
     }
 
     /// <summary>
-    /// The database name.
+    /// Gets the create database result.
     /// </summary>
-    protected string Database { get; }
+    public CreateDatabaseResult Result { get; }
 
-    /// <summary>
-    /// The connection string.
-    /// </summary>
-    public string ConnectionString { get; }
-
-    /// <summary>
-    /// The master connection string.
-    /// </summary>
-    protected string MasterConnectionString { get; }
 }

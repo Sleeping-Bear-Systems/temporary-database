@@ -11,7 +11,7 @@ internal static class TemporaryDatabaseGuardTests
     public static void FromEnvironmentVariable_ValidatesBehavior()
     {
         using var guard = TemporaryDatabaseGuard.FromEnvironmentVariable(TestServerEnvironmentVariable);
-        CheckDatabaseExists(guard.ConnectionString);
+        CheckDatabaseExists(guard.Result.ConnectionString);
     }
 
     [Test]
@@ -23,7 +23,7 @@ internal static class TemporaryDatabaseGuardTests
         using var guard =
             TemporaryDatabaseGuard.FromParameters(builder.Server!, (ushort)builder.Port, builder.UserID!,
                 builder.Password!);
-        CheckDatabaseExists(guard.ConnectionString);
+        CheckDatabaseExists(guard.Result.ConnectionString);
     }
 
     private static void CheckDatabaseExists(string connectionString)

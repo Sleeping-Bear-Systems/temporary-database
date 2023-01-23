@@ -6,15 +6,7 @@
 public sealed class CreateDatabaseOptions
 {
     /// <summary>
-    /// Prefix for the random database name.
-    /// </summary>
-    public string? DatabasePrefix { get; init; }
-
-    /// <summary>
     /// Default options.
     /// </summary>
-    public static readonly CreateDatabaseOptions Defaults = new()
-    {
-        DatabasePrefix = "sbs_"
-    };
+    public static readonly CreateDatabaseOptions Defaults = new();
 }

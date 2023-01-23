@@ -8,5 +8,5 @@ public interface ITemporaryDatabaseGuard : IDisposable
     /// <summary>
     /// Connection string.
     /// </summary>
-    string ConnectionString { get; }
+    CreateDatabaseResult Result { get; }
 }

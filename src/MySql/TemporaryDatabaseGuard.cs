@@ -8,15 +8,15 @@ namespace SleepingBearSystems.TemporaryDatabase.MySql;
 /// </summary>
 public sealed class TemporaryDatabaseGuard : TemporaryDatabaseGuardBase, ITemporaryDatabaseGuard
 {
-    private TemporaryDatabaseGuard(string database, string connectionString, string masterConnectionString)
-        : base(database, connectionString, masterConnectionString)
+    private TemporaryDatabaseGuard(CreateDatabaseResult result)
+        : base(result)
     {
     }
 
     /// <inheritdoc cref="IDisposable"/>
     public void Dispose()
     {
-        MySqlHelper.DropDatabase(this.MasterConnectionString, this.Database);
+        MySqlHelper.DropDatabase(this.Result);
     }
 
     /// <summary>
@@ -24,9 +24,11 @@ public sealed class TemporaryDatabaseGuard : TemporaryDatabaseGuardBase, ITempor
     /// </summary>
     public static TemporaryDatabaseGuard FromEnvironmentVariable(
         string variable,
+        string? prefix = default,
         CreateDatabaseOptions? options = default) =>
         TemporaryDatabaseGuard.FromConnectionString(
             Environment.GetEnvironmentVariable(variable) ?? string.Empty,
+            prefix,
             options);
 
     /// <summary>
@@ -36,8 +38,9 @@ public sealed class TemporaryDatabaseGuard : TemporaryDatabaseGuardBase, ITempor
         string server,
         string userId,
         string password,
+        string? prefix = default,
         CreateDatabaseOptions? options = default) =>
-        TemporaryDatabaseGuard.FromParameters(server, null, userId, password, options);
+        TemporaryDatabaseGuard.FromParameters(server, null, userId, password, prefix, options);
 
     /// <summary>
     /// Factory method for creating a <see cref="TemporaryDatabaseGuard"/> instance.
@@ -47,6 +50,7 @@ public sealed class TemporaryDatabaseGuard : TemporaryDatabaseGuardBase, ITempor
         ushort? port,
         string userId,
         string password,
+        string? prefix = default,
         CreateDatabaseOptions? options = default)
     {
         var builder = new MySqlConnectionStringBuilder()
@@ -60,7 +64,7 @@ public sealed class TemporaryDatabaseGuard : TemporaryDatabaseGuardBase, ITempor
             builder.Port = port.Value;
         }
 
-        return FromConnectionString(builder.ToString(), options);
+        return FromConnectionString(builder.ToString(), prefix, options);
     }
 
     /// <summary>
@@ -68,22 +72,14 @@ public sealed class TemporaryDatabaseGuard : TemporaryDatabaseGuardBase, ITempor
     /// </summary>
     public static TemporaryDatabaseGuard FromConnectionString(
         string connectionString,
+        string? prefix = default,
         CreateDatabaseOptions? options = default)
     {
-        var validOptions = options ?? CreateDatabaseOptions.Defaults;
+        var result = MySqlHelper.CreateDatabase(
+            connectionString,
+            DatabaseHelper.GenerateDatabaseName(prefix),
+            options ?? CreateDatabaseOptions.Defaults);
 
-        var builder = new MySqlConnectionStringBuilder(connectionString);
-        var database = builder.Database;
-        if (string.IsNullOrWhiteSpace(database))
-        {
-            database = validOptions.GenerateDatabaseName();
-        }
-
-        builder.Database = "mysql";
-        var masterConnectionString = builder.ToString();
-
-        MySqlHelper.CreateDatabase(masterConnectionString, database);
-
-        return new TemporaryDatabaseGuard(database, connectionString, masterConnectionString);
+        return new TemporaryDatabaseGuard(result);
     }
 }

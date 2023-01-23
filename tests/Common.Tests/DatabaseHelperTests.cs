@@ -3,46 +3,40 @@ using System.Text.RegularExpressions;
 namespace SleepingBearSystems.TemporaryDatabase.Common.Tests;
 
 /// <summary>
-/// Tests for <see cref="TemporaryDatabaseGuardOptionsExtensions"/>.
+/// Tests for <see cref="DatabaseHelper"/>.
 /// </summary>
-internal static class TemporaryDatabaseGuardOptionsExtensionsTests
+internal static class DatabaseHelperTests
 {
     [Test]
     public static void GenerateDatabaseName_ValidatesBehavior()
     {
-        // use case: null options
-        {
-            var ex = Assert.Throws<ArgumentNullException>(() =>
-                default(CreateDatabaseOptions)!.GenerateDatabaseName());
-            Assert.That(ex!.ParamName, Is.EqualTo("options"));
-        }
         // use case: null prefix
         {
-            var options = new CreateDatabaseOptions() { DatabasePrefix = default };
-            var database = options.GenerateDatabaseName();
+            var database = DatabaseHelper.GenerateDatabaseName(prefix: null);
             Assert.Multiple(() =>
             {
-                Assert.That(database, Has.Length.EqualTo(32));
+                Assert.That(database, Has.Length.EqualTo(32 + DatabaseHelper.DefaultPrefix.Length));
+                Assert.That(database, Does.StartWith(DatabaseHelper.DefaultPrefix));
                 Assert.That(GuidRegex.IsMatch(database), Is.True);
             });
         }
         // use case: empty prefix
         {
-            var options = new CreateDatabaseOptions() { DatabasePrefix = string.Empty };
-            var database = options.GenerateDatabaseName();
+            var database = DatabaseHelper.GenerateDatabaseName(prefix: string.Empty);
             Assert.Multiple(() =>
             {
-                Assert.That(database, Has.Length.EqualTo(32));
+                Assert.That(database, Has.Length.EqualTo(32 + DatabaseHelper.DefaultPrefix.Length));
+                Assert.That(database, Does.StartWith(DatabaseHelper.DefaultPrefix));
                 Assert.That(GuidRegex.IsMatch(database), Is.True);
             });
         }
         // use case: whitespace prefix
         {
-            var options = new CreateDatabaseOptions() { DatabasePrefix = "   " };
-            var database = options.GenerateDatabaseName();
+            var database = DatabaseHelper.GenerateDatabaseName(prefix: "    ");
             Assert.Multiple(() =>
             {
-                Assert.That(database, Has.Length.EqualTo(32));
+                Assert.That(database, Has.Length.EqualTo(32 + DatabaseHelper.DefaultPrefix.Length));
+                Assert.That(database, Does.StartWith(DatabaseHelper.DefaultPrefix));
                 Assert.That(GuidRegex.IsMatch(database), Is.True);
             });
         }
@@ -50,8 +44,7 @@ internal static class TemporaryDatabaseGuardOptionsExtensionsTests
         // use case: valid prefix
         {
             const string prefix = "prefix_";
-            var options = new CreateDatabaseOptions() { DatabasePrefix = prefix };
-            var database = options.GenerateDatabaseName();
+            var database = DatabaseHelper.GenerateDatabaseName(prefix);
             Assert.Multiple(() =>
             {
                 Assert.That(database, Has.Length.EqualTo(32 + prefix.Length));

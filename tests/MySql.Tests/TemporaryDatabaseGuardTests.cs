@@ -14,7 +14,7 @@ internal static class TemporaryDatabaseGuardTests
     {
         // use case: default options
         {
-            var guard = TemporaryDatabaseGuard.FromEnvironmentVariable(TestServerEnvironmentVariable);
+            ITemporaryDatabaseGuard guard = TemporaryDatabaseGuard.FromEnvironmentVariable(TestServerEnvironmentVariable);
             using (guard)
             {
                 Assert.That(
@@ -29,11 +29,11 @@ internal static class TemporaryDatabaseGuardTests
 
         // use case: custom options
         {
-            var options = new CreateDatabaseOptions()
+            var options = new CreateDatabaseOptions
             {
                 Collation = "latin1_swedish_ci"
             };
-            var guard = TemporaryDatabaseGuard.FromEnvironmentVariable(TestServerEnvironmentVariable, options: options);
+            ITemporaryDatabaseGuard guard = TemporaryDatabaseGuard.FromEnvironmentVariable(TestServerEnvironmentVariable, options: options);
             using (guard)
             {
                 Assert.That(
@@ -62,7 +62,7 @@ internal static class TemporaryDatabaseGuardTests
 
         // use case: default options
         {
-            var guard = TemporaryDatabaseGuard.FromParameters(
+            ITemporaryDatabaseGuard guard = TemporaryDatabaseGuard.FromParameters(
                 builder.Server!,
                 (ushort)builder.Port,
                 builder.UserID!,
@@ -83,7 +83,7 @@ internal static class TemporaryDatabaseGuardTests
     {
         var connectionString = Environment.GetEnvironmentVariable(TestServerEnvironmentVariable);
 
-        var guard = TemporaryDatabaseGuard.FromConnectionString(connectionString!);
+        ITemporaryDatabaseGuard guard = TemporaryDatabaseGuard.FromConnectionString(connectionString!);
         using (guard)
         {
             Assert.That(MySqlHelper.CheckDatabaseExists(guard.Result.MasterConnectionString, guard.Result.Database),

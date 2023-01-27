@@ -54,5 +54,5 @@ internal static class DatabaseHelperTests
         }
     }
 
-    private static readonly Regex GuidRegex = new("[a-f0-9]{32}");
+    private static readonly Regex GuidRegex = new(pattern: "[a-f0-9]{32}");
 }

@@ -1,4 +1,5 @@
 ﻿using Npgsql;
+using SleepingBearSystems.TemporaryDatabase.Common;
 
 namespace SleepingBearSystems.TemporaryDatabase.Postgres.Tests;
 
@@ -10,7 +11,7 @@ internal static class TemporaryDatabaseGuardTests
     [Test]
     public static void FromEnvironmentVariable_ValidatesBehavior()
     {
-        var guard = TemporaryDatabaseGuard.FromEnvironmentVariable(TestServerEnvironmentVariable);
+        ITemporaryDatabaseGuard guard = TemporaryDatabaseGuard.FromEnvironmentVariable(TestServerEnvironmentVariable);
         using (guard)
         {
             Assert.That(PostgresHelper.CheckDatabaseExists(guard.Result.MasterConnectionString, guard.Result.Database),
@@ -27,7 +28,7 @@ internal static class TemporaryDatabaseGuardTests
         var connectionString = Environment.GetEnvironmentVariable(TestServerEnvironmentVariable);
         var builder = new NpgsqlConnectionStringBuilder(connectionString);
 
-        var guard =
+        ITemporaryDatabaseGuard guard =
             TemporaryDatabaseGuard.FromParameters(
                 builder.Host!,
                 (ushort)builder.Port,
@@ -48,7 +49,7 @@ internal static class TemporaryDatabaseGuardTests
     {
         var connectionString = Environment.GetEnvironmentVariable(TestServerEnvironmentVariable);
 
-        var guard = TemporaryDatabaseGuard.FromConnectionString(connectionString!);
+        ITemporaryDatabaseGuard guard = TemporaryDatabaseGuard.FromConnectionString(connectionString!);
         using (guard)
         {
             Assert.That(PostgresHelper.CheckDatabaseExists(guard.Result.MasterConnectionString, guard.Result.Database),

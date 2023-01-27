@@ -6,7 +6,7 @@ namespace SleepingBearSystems.TemporaryDatabase.Postgres;
 /// <summary>
 /// Temporary database guard for Postgres databases.
 /// </summary>
-public sealed class TemporaryDatabaseGuard : TemporaryDatabaseGuardBase, IDisposable
+public sealed class TemporaryDatabaseGuard : TemporaryDatabaseGuardBase, ITemporaryDatabaseGuard
 {
     private TemporaryDatabaseGuard(CreateDatabaseResult result)
         : base(result)
@@ -34,6 +34,7 @@ public sealed class TemporaryDatabaseGuard : TemporaryDatabaseGuardBase, IDispos
     /// <summary>
     /// Factory method for creating a <see cref="TemporaryDatabaseGuard"/> instance.
     /// </summary>
+    // ReSharper disable once UnusedMember.Global
     public static TemporaryDatabaseGuard FromParameters(
         string host,
         string username,

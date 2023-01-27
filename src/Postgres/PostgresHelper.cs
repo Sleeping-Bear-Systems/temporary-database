@@ -27,7 +27,7 @@ public static class PostgresHelper
             .Append(CultureInfo.InvariantCulture, $"CREATE DATABASE {database}");
         if (!string.IsNullOrWhiteSpace(validOptions.Collation))
         {
-            builder.Append(CultureInfo.InvariantCulture, $" COLLATE {validOptions.Collation}");
+            // TODO - Add support for Postgres collation
         }
 
         builder.Append(';');

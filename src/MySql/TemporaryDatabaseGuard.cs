@@ -34,6 +34,7 @@ public sealed class TemporaryDatabaseGuard : TemporaryDatabaseGuardBase, ITempor
     /// <summary>
     /// Factory method for creating a <see cref="TemporaryDatabaseGuard"/> instance.
     /// </summary>
+    // ReSharper disable once UnusedMember.Global
     public static TemporaryDatabaseGuard FromParameters(
         string server,
         string userId,

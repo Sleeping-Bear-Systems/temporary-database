@@ -13,9 +13,8 @@ public static class DatabaseHelper
     public static string GenerateDatabaseName(string? prefix = default) =>
         new StringBuilder()
             .Append(string.IsNullOrWhiteSpace(prefix) ? DefaultPrefix : prefix)
-            .Append(Guid.NewGuid().ToString())
+            .Append(Guid.NewGuid().ToString("N"))
             .ToString()
-            .Replace("-", "")
             .ToLowerInvariant();
 
     /// <summary>

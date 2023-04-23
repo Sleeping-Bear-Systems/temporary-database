@@ -16,21 +16,32 @@ public static class MySqlHelper
     public static DatabaseInformation CreateDatabase(
         string connectionString,
         string database,
-        CreateDatabaseOptions? options = default)
+        DatabaseOptions? options = default)
     {
-        var validOptions = options ?? CreateDatabaseOptions.Defaults;
+        var validOptions = options ?? DatabaseOptions.Defaults;
         var masterConnectionString = GetMasterConnectionString(connectionString);
         using var connection = new MySqlConnection(masterConnectionString);
         connection.Open();
 
         var builder = new StringBuilder()
             .Append(CultureInfo.InvariantCulture, $"CREATE DATABASE {database}");
+        if (!string.IsNullOrWhiteSpace(validOptions.CharacterSet))
+        {
+            builder.Append(CultureInfo.InvariantCulture, $" CHARACTER SET {validOptions.CharacterSet}");
+        }
+
         if (!string.IsNullOrWhiteSpace(validOptions.Collation))
         {
             builder.Append(CultureInfo.InvariantCulture, $" COLLATE {validOptions.Collation}");
         }
 
+        if (validOptions.Encryption)
+        {
+            builder.Append(CultureInfo.InvariantCulture, $" ENCRYPTION 'Y'");
+        }
+
         builder.Append(';');
+
         using var command = new MySqlCommand(builder.ToString(), connection);
         command.ExecuteNonQuery();
         return new DatabaseInformation(connectionString, database);

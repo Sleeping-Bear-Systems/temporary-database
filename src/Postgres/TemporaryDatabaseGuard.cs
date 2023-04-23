@@ -25,7 +25,7 @@ public sealed class TemporaryDatabaseGuard : TemporaryDatabaseGuardBase, ITempor
     public static TemporaryDatabaseGuard FromEnvironmentVariable(
         string variable,
         string? prefix = default,
-        CreateDatabaseOptions? options = default)
+        DatabaseOptions? options = default)
     {
         return FromConnectionString(
             Environment.GetEnvironmentVariable(variable) ?? string.Empty,
@@ -42,7 +42,7 @@ public sealed class TemporaryDatabaseGuard : TemporaryDatabaseGuardBase, ITempor
         string username,
         string password,
         string? prefix = default,
-        CreateDatabaseOptions? options = default)
+        DatabaseOptions? options = default)
     {
         return FromParameters(host, null, username, password, prefix, options);
     }
@@ -56,7 +56,7 @@ public sealed class TemporaryDatabaseGuard : TemporaryDatabaseGuardBase, ITempor
         string username,
         string password,
         string? prefix = default,
-        CreateDatabaseOptions? options = default)
+        DatabaseOptions? options = default)
     {
         var builder = new NpgsqlConnectionStringBuilder
         {
@@ -78,7 +78,7 @@ public sealed class TemporaryDatabaseGuard : TemporaryDatabaseGuardBase, ITempor
     public static TemporaryDatabaseGuard FromConnectionString(
         string connectionString,
         string? prefix = default,
-        CreateDatabaseOptions? options = default)
+        DatabaseOptions? options = default)
     {
         var result = PostgresHelper.CreateDatabase(
             connectionString,

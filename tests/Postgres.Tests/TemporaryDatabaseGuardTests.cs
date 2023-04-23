@@ -13,15 +13,43 @@ internal static class TemporaryDatabaseGuardTests
     [Test]
     public static void FromEnvironmentVariable_ValidatesBehavior()
     {
-        ITemporaryDatabaseGuard guard = TemporaryDatabaseGuard.FromEnvironmentVariable(TestServerEnvironmentVariable);
-        using (guard)
+        // use case: default options
         {
-            Assert.That(PostgresHelper.CheckDatabaseExists(guard.Information, guard.Information.Database),
-                Is.True);
+            ITemporaryDatabaseGuard guard =
+                TemporaryDatabaseGuard.FromEnvironmentVariable(TestServerEnvironmentVariable);
+            using (guard)
+            {
+                Assert.That(
+                    PostgresHelper.CheckDatabaseExists(guard.Information, guard.Information.Database),
+                    Is.True);
+            }
+
+            Assert.That(
+                PostgresHelper.CheckDatabaseExists(guard.Information, guard.Information.Database),
+                Is.False);
         }
 
-        Assert.That(PostgresHelper.CheckDatabaseExists(guard.Information, guard.Information.Database),
-            Is.False);
+        // use case: custom options
+        {
+            var options = new DatabaseOptions
+            {
+                CType = "en_US.utf8",
+                Collation = "en_US.utf8",
+                Encoding = "utf8"
+            };
+            ITemporaryDatabaseGuard guard =
+                TemporaryDatabaseGuard.FromEnvironmentVariable(TestServerEnvironmentVariable, options: options);
+            using (guard)
+            {
+                Assert.That(
+                    PostgresHelper.CheckDatabaseExists(guard.Information, guard.Information.Database),
+                    Is.True);
+            }
+
+            Assert.That(
+                PostgresHelper.CheckDatabaseExists(guard.Information, guard.Information.Database),
+                Is.False);
+        }
     }
 
     [Test]

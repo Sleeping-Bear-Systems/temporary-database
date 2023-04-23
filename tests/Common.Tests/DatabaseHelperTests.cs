@@ -14,7 +14,7 @@ internal static class DatabaseHelperTests
     {
         // use case: null prefix
         {
-            var database = DatabaseHelper.GenerateDatabaseName(null);
+            var database = DatabaseHelper.GenerateDatabaseName();
             Assert.Multiple(() =>
             {
                 Assert.That(database, Has.Length.EqualTo(32 + DatabaseHelper.DefaultPrefix.Length));

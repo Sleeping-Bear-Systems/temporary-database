@@ -16,21 +16,32 @@ public static class PostgresHelper
     public static DatabaseInformation CreateDatabase(
         string connectionString,
         string database,
-        CreateDatabaseOptions? options = default)
+        DatabaseOptions? options = default)
     {
-        var validOptions = options ?? CreateDatabaseOptions.Defaults;
+        var validOptions = options ?? DatabaseOptions.Defaults;
         var masterConnectionString = GetMasterConnectionString(connectionString);
         using var connection = new NpgsqlConnection(masterConnectionString);
         connection.Open();
 
         var builder = new StringBuilder()
             .Append(CultureInfo.InvariantCulture, $"CREATE DATABASE {database}");
+        if (!string.IsNullOrWhiteSpace(validOptions.Encoding))
+        {
+            builder.Append(CultureInfo.InvariantCulture, $" ENCODING '{validOptions.Encoding}'");
+        }
+
         if (!string.IsNullOrWhiteSpace(validOptions.Collation))
         {
-            // TODO - Add support for Postgres collation
+            builder.Append(CultureInfo.InvariantCulture, $" LC_COLLATE '{validOptions.Collation}'");
+        }
+
+        if (!string.IsNullOrWhiteSpace(validOptions.CType))
+        {
+            builder.Append(CultureInfo.InvariantCulture, $"LC_CTYPE '{validOptions.CType}'");
         }
 
         builder.Append(';');
+
         using var command = new NpgsqlCommand(builder.ToString(), connection);
         command.ExecuteNonQuery();
         return new DatabaseInformation(connectionString, database);

@@ -3,7 +3,7 @@ namespace SleepingBearSystems.TemporaryDatabase.Common.Tests;
 /// <summary>
 ///     Tests for <see cref="DatabaseInformation" />.
 /// </summary>
-internal static class CreateDatabaseResultTests
+internal static class CreateDatabaseInformationTests
 {
     [Test]
     public static void Ctor_ValidatesBehavior()

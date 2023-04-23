@@ -19,6 +19,6 @@ internal static class PostgresHelperTests
         }.ToString();
         var masterConnectionString = PostgresHelper.GetMasterConnectionString(connectionString);
         Assert.That(masterConnectionString,
-            Is.EqualTo("Host=local.server.com;Username=user;Password=password;Database=postgres"));
+            Is.EqualTo("Host=local.net;Username=user;Password=password;Database=postgres"));
     }
 }

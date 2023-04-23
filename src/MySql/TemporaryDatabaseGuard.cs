@@ -8,15 +8,15 @@ namespace SleepingBearSystems.TemporaryDatabase.MySql;
 /// </summary>
 public sealed class TemporaryDatabaseGuard : TemporaryDatabaseGuardBase, ITemporaryDatabaseGuard
 {
-    private TemporaryDatabaseGuard(CreateDatabaseResult result)
-        : base(result)
+    private TemporaryDatabaseGuard(DatabaseInformation information)
+        : base(information)
     {
     }
 
     /// <inheritdoc cref="IDisposable"/>
     public void Dispose()
     {
-        MySqlHelper.DropDatabase(this.Result);
+        MySqlHelper.DropDatabase(this.Information);
     }
 
     /// <summary>

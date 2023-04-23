@@ -8,13 +8,13 @@ public abstract class TemporaryDatabaseGuardBase
     /// <summary>
     /// Constructor
     /// </summary>
-    protected TemporaryDatabaseGuardBase(CreateDatabaseResult result)
+    protected TemporaryDatabaseGuardBase(DatabaseInformation information)
     {
-        this.Result = result ?? throw new ArgumentNullException(nameof(result));
+        this.Information = information ?? throw new ArgumentNullException(nameof(information));
     }
 
     /// <summary>
     /// Gets the create database result.
     /// </summary>
-    public CreateDatabaseResult Result { get; }
+    public DatabaseInformation Information { get; }
 }

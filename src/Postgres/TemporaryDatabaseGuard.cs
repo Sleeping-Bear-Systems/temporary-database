@@ -8,15 +8,15 @@ namespace SleepingBearSystems.TemporaryDatabase.Postgres;
 /// </summary>
 public sealed class TemporaryDatabaseGuard : TemporaryDatabaseGuardBase, ITemporaryDatabaseGuard
 {
-    private TemporaryDatabaseGuard(CreateDatabaseResult result)
-        : base(result)
+    private TemporaryDatabaseGuard(DatabaseInformation information)
+        : base(information)
     {
     }
 
     /// <inheritdoc cref="IDisposable"/>
     public void Dispose()
     {
-        PostgresHelper.DropDatabase(this.Result);
+        PostgresHelper.DropDatabase(this.Information);
     }
 
     /// <summary>

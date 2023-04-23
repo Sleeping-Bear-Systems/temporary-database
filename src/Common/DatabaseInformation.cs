@@ -3,22 +3,16 @@ namespace SleepingBearSystems.TemporaryDatabase.Common;
 /// <summary>
 /// Container class hold database creation information.
 /// </summary>
-public sealed class CreateDatabaseResult
+public sealed class DatabaseInformation
 {
     /// <summary>
     /// Constructor.
     /// </summary>
-    public CreateDatabaseResult(string masterConnectionString, string connectionString, string database)
+    public DatabaseInformation(string connectionString, string database)
     {
-        this.MasterConnectionString = masterConnectionString;
         this.ConnectionString = connectionString;
         this.Database = database;
     }
-
-    /// <summary>
-    /// The master connection string.
-    /// </summary>
-    public string MasterConnectionString { get; }
 
     /// <summary>
     /// The connection string.

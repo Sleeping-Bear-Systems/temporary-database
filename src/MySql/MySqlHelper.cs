@@ -13,7 +13,7 @@ public static class MySqlHelper
     /// <summary>
     /// Creates a MySQL database.
     /// </summary>
-    public static CreateDatabaseResult CreateDatabase(
+    public static DatabaseInformation CreateDatabase(
         string connectionString,
         string database,
         CreateDatabaseOptions? options = default)
@@ -33,20 +33,20 @@ public static class MySqlHelper
         builder.Append(';');
         using var command = new MySqlCommand(builder.ToString(), connection);
         command.ExecuteNonQuery();
-        return new CreateDatabaseResult(masterConnectionString, connectionString, database);
+        return new DatabaseInformation(connectionString, database);
     }
 
     /// <summary>
     /// Drops a MySQL database.
     /// </summary>
-    public static void DropDatabase(CreateDatabaseResult result)
+    public static void DropDatabase(DatabaseInformation information)
     {
-        using var connection = new MySqlConnection(result.MasterConnectionString);
+        using var connection = new MySqlConnection(GetMasterConnectionString(information.ConnectionString));
         connection.Open();
         var cmdText = string.Format(
             CultureInfo.InvariantCulture,
             "DROP DATABASE IF EXISTS {0};",
-            result.Database);
+            information.Database);
         using var command = new MySqlCommand(cmdText, connection);
         command.ExecuteNonQuery();
     }
@@ -54,9 +54,9 @@ public static class MySqlHelper
     /// <summary>
     /// Checks if a database exists.
     /// </summary>
-    public static bool CheckDatabaseExists(string masterConnectionString, string database, bool ignoreCase = true)
+    public static bool CheckDatabaseExists(DatabaseInformation information, string database, bool ignoreCase = true)
     {
-        using var connection = new MySqlConnection(masterConnectionString);
+        using var connection = new MySqlConnection(GetMasterConnectionString(information.ConnectionString));
         connection.Open();
         using var command = new MySqlCommand("SHOW DATABASES;", connection);
         using var reader = command.ExecuteReader();
@@ -72,7 +72,7 @@ public static class MySqlHelper
     /// <summary>
     /// Gets the master database connection string.
     /// </summary>
-    private static string GetMasterConnectionString(string connectionString) =>
+    public static string GetMasterConnectionString(string connectionString) =>
         new MySqlConnectionStringBuilder(connectionString)
         {
             Database = "mysql"

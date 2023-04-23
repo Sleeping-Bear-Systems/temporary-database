@@ -14,11 +14,11 @@ internal static class TemporaryDatabaseGuardTests
         ITemporaryDatabaseGuard guard = TemporaryDatabaseGuard.FromEnvironmentVariable(TestServerEnvironmentVariable);
         using (guard)
         {
-            Assert.That(PostgresHelper.CheckDatabaseExists(guard.Result.MasterConnectionString, guard.Result.Database),
+            Assert.That(PostgresHelper.CheckDatabaseExists(guard.Information, guard.Information.Database),
                 Is.True);
         }
 
-        Assert.That(PostgresHelper.CheckDatabaseExists(guard.Result.MasterConnectionString, guard.Result.Database),
+        Assert.That(PostgresHelper.CheckDatabaseExists(guard.Information, guard.Information.Database),
             Is.False);
     }
 
@@ -36,11 +36,11 @@ internal static class TemporaryDatabaseGuardTests
                 builder.Password!);
         using (guard)
         {
-            Assert.That(PostgresHelper.CheckDatabaseExists(guard.Result.MasterConnectionString, guard.Result.Database),
+            Assert.That(PostgresHelper.CheckDatabaseExists(guard.Information, guard.Information.Database),
                 Is.True);
         }
 
-        Assert.That(PostgresHelper.CheckDatabaseExists(guard.Result.MasterConnectionString, guard.Result.Database),
+        Assert.That(PostgresHelper.CheckDatabaseExists(guard.Information, guard.Information.Database),
             Is.False);
     }
 
@@ -52,11 +52,11 @@ internal static class TemporaryDatabaseGuardTests
         ITemporaryDatabaseGuard guard = TemporaryDatabaseGuard.FromConnectionString(connectionString!);
         using (guard)
         {
-            Assert.That(PostgresHelper.CheckDatabaseExists(guard.Result.MasterConnectionString, guard.Result.Database),
+            Assert.That(PostgresHelper.CheckDatabaseExists(guard.Information, guard.Information.Database),
                 Is.True);
         }
 
-        Assert.That(PostgresHelper.CheckDatabaseExists(guard.Result.MasterConnectionString, guard.Result.Database),
+        Assert.That(PostgresHelper.CheckDatabaseExists(guard.Information, guard.Information.Database),
             Is.False);
     }
 

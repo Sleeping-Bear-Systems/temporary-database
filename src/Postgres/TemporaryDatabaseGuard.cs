@@ -4,7 +4,7 @@ using SleepingBearSystems.TemporaryDatabase.Common;
 namespace SleepingBearSystems.TemporaryDatabase.Postgres;
 
 /// <summary>
-/// Temporary database guard for Postgres databases.
+///     Temporary database guard for Postgres databases.
 /// </summary>
 public sealed class TemporaryDatabaseGuard : TemporaryDatabaseGuardBase, ITemporaryDatabaseGuard
 {
@@ -13,26 +13,28 @@ public sealed class TemporaryDatabaseGuard : TemporaryDatabaseGuardBase, ITempor
     {
     }
 
-    /// <inheritdoc cref="IDisposable"/>
+    /// <inheritdoc cref="IDisposable" />
     public void Dispose()
     {
         PostgresHelper.DropDatabase(this.Information);
     }
 
     /// <summary>
-    /// Factory method for creating a <see cref="TemporaryDatabaseGuard"/> instance.
+    ///     Factory method for creating a <see cref="TemporaryDatabaseGuard" /> instance.
     /// </summary>
     public static TemporaryDatabaseGuard FromEnvironmentVariable(
         string variable,
         string? prefix = default,
-        CreateDatabaseOptions? options = default) =>
-        FromConnectionString(
+        CreateDatabaseOptions? options = default)
+    {
+        return FromConnectionString(
             Environment.GetEnvironmentVariable(variable) ?? string.Empty,
             prefix,
             options);
+    }
 
     /// <summary>
-    /// Factory method for creating a <see cref="TemporaryDatabaseGuard"/> instance.
+    ///     Factory method for creating a <see cref="TemporaryDatabaseGuard" /> instance.
     /// </summary>
     // ReSharper disable once UnusedMember.Global
     public static TemporaryDatabaseGuard FromParameters(
@@ -40,11 +42,13 @@ public sealed class TemporaryDatabaseGuard : TemporaryDatabaseGuardBase, ITempor
         string username,
         string password,
         string? prefix = default,
-        CreateDatabaseOptions? options = default) =>
-        FromParameters(host, port: null, username, password, prefix, options);
+        CreateDatabaseOptions? options = default)
+    {
+        return FromParameters(host, null, username, password, prefix, options);
+    }
 
     /// <summary>
-    /// Factory method for creating a <see cref="TemporaryDatabaseGuard"/> instance.
+    ///     Factory method for creating a <see cref="TemporaryDatabaseGuard" /> instance.
     /// </summary>
     public static TemporaryDatabaseGuard FromParameters(
         string host,
@@ -69,7 +73,7 @@ public sealed class TemporaryDatabaseGuard : TemporaryDatabaseGuardBase, ITempor
     }
 
     /// <summary>
-    /// Factory method for creating a <see cref="TemporaryDatabaseGuard"/> instance.
+    ///     Factory method for creating a <see cref="TemporaryDatabaseGuard" /> instance.
     /// </summary>
     public static TemporaryDatabaseGuard FromConnectionString(
         string connectionString,

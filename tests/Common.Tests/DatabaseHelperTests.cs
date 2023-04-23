@@ -3,16 +3,18 @@ using System.Text.RegularExpressions;
 namespace SleepingBearSystems.TemporaryDatabase.Common.Tests;
 
 /// <summary>
-/// Tests for <see cref="DatabaseHelper"/>.
+///     Tests for <see cref="DatabaseHelper" />.
 /// </summary>
 internal static class DatabaseHelperTests
 {
+    private static readonly Regex GuidRegex = new("[a-f0-9]{32}");
+
     [Test]
     public static void GenerateDatabaseName_ValidatesBehavior()
     {
         // use case: null prefix
         {
-            var database = DatabaseHelper.GenerateDatabaseName(prefix: null);
+            var database = DatabaseHelper.GenerateDatabaseName(null);
             Assert.Multiple(() =>
             {
                 Assert.That(database, Has.Length.EqualTo(32 + DatabaseHelper.DefaultPrefix.Length));
@@ -22,7 +24,7 @@ internal static class DatabaseHelperTests
         }
         // use case: empty prefix
         {
-            var database = DatabaseHelper.GenerateDatabaseName(prefix: string.Empty);
+            var database = DatabaseHelper.GenerateDatabaseName(string.Empty);
             Assert.Multiple(() =>
             {
                 Assert.That(database, Has.Length.EqualTo(32 + DatabaseHelper.DefaultPrefix.Length));
@@ -32,7 +34,7 @@ internal static class DatabaseHelperTests
         }
         // use case: whitespace prefix
         {
-            var database = DatabaseHelper.GenerateDatabaseName(prefix: "    ");
+            var database = DatabaseHelper.GenerateDatabaseName("    ");
             Assert.Multiple(() =>
             {
                 Assert.That(database, Has.Length.EqualTo(32 + DatabaseHelper.DefaultPrefix.Length));
@@ -53,6 +55,4 @@ internal static class DatabaseHelperTests
             });
         }
     }
-
-    private static readonly Regex GuidRegex = new(pattern: "[a-f0-9]{32}");
 }

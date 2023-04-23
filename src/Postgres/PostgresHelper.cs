@@ -6,12 +6,12 @@ using SleepingBearSystems.TemporaryDatabase.Common;
 namespace SleepingBearSystems.TemporaryDatabase.Postgres;
 
 /// <summary>
-/// Helper methods for Postgres databases.
+///     Helper methods for Postgres databases.
 /// </summary>
 public static class PostgresHelper
 {
     /// <summary>
-    /// Creates a Postgres database.
+    ///     Creates a Postgres database.
     /// </summary>
     public static DatabaseInformation CreateDatabase(
         string connectionString,
@@ -37,7 +37,7 @@ public static class PostgresHelper
     }
 
     /// <summary>
-    /// Drops a Postgres database.
+    ///     Drops a Postgres database.
     /// </summary>
     public static void DropDatabase(DatabaseInformation information)
     {
@@ -52,7 +52,7 @@ public static class PostgresHelper
     }
 
     /// <summary>
-    /// Checks if a database exists.
+    ///     Checks if a database exists.
     /// </summary>
     public static bool CheckDatabaseExists(DatabaseInformation information, string database, bool ignoreCase = true)
     {
@@ -63,20 +63,19 @@ public static class PostgresHelper
         using var command = new NpgsqlCommand("SELECT datname FROM pg_database", connection);
         using var reader = command.ExecuteReader();
         var databases = new List<string>();
-        while (reader.Read())
-        {
-            databases.Add(reader.GetString(0));
-        }
+        while (reader.Read()) databases.Add(reader.GetString(0));
 
         return databases.Contains(database, ignoreCase ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal);
     }
 
     /// <summary>
-    /// Gets the master database connection string.
+    ///     Gets the master database connection string.
     /// </summary>
-    public static string GetMasterConnectionString(string connectionString) =>
-        new NpgsqlConnectionStringBuilder(connectionString)
+    public static string GetMasterConnectionString(string connectionString)
+    {
+        return new NpgsqlConnectionStringBuilder(connectionString)
         {
             Database = "postgres"
         }.ToString();
+    }
 }

@@ -5,16 +5,19 @@ using SleepingBearSystems.TemporaryDatabase.Common;
 namespace SleepingBearSystems.TemporaryDatabase.MySql.Tests;
 
 /// <summary>
-/// Tests for <see cref="TemporaryDatabaseGuard"/>.
+///     Tests for <see cref="TemporaryDatabaseGuard" />.
 /// </summary>
 internal static class TemporaryDatabaseGuardTests
 {
+    private const string TestServerEnvironmentVariable = "SBS_TEST_SERVER_MYSQL";
+
     [Test]
     public static void FromEnvironmentVariable_ValidatesBehavior()
     {
         // use case: default options
         {
-            ITemporaryDatabaseGuard guard = TemporaryDatabaseGuard.FromEnvironmentVariable(TestServerEnvironmentVariable);
+            ITemporaryDatabaseGuard guard =
+                TemporaryDatabaseGuard.FromEnvironmentVariable(TestServerEnvironmentVariable);
             using (guard)
             {
                 Assert.That(
@@ -33,7 +36,8 @@ internal static class TemporaryDatabaseGuardTests
             {
                 Collation = "latin1_swedish_ci"
             };
-            ITemporaryDatabaseGuard guard = TemporaryDatabaseGuard.FromEnvironmentVariable(TestServerEnvironmentVariable, options: options);
+            ITemporaryDatabaseGuard guard =
+                TemporaryDatabaseGuard.FromEnvironmentVariable(TestServerEnvironmentVariable, options: options);
             using (guard)
             {
                 Assert.That(
@@ -94,8 +98,6 @@ internal static class TemporaryDatabaseGuardTests
             Is.False);
     }
 
-    private const string TestServerEnvironmentVariable = "SBS_TEST_SERVER_MYSQL";
-
     private static (string, string) QueryCharacterSetCollation(DatabaseInformation information, string database)
     {
         var masterConnectionString = MySqlHelper.GetMasterConnectionString(information.ConnectionString);
@@ -104,7 +106,7 @@ internal static class TemporaryDatabaseGuardTests
         var cmdText =
             string.Format(
                 CultureInfo.InvariantCulture,
-                format: "SELECT DEFAULT_CHARACTER_SET_NAME, DEFAULT_COLLATION_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{0}';",
+                "SELECT DEFAULT_CHARACTER_SET_NAME, DEFAULT_COLLATION_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{0}';",
                 database);
         var command = new MySqlCommand(cmdText, connection);
         using var reader = command.ExecuteReader();

@@ -4,10 +4,12 @@ using SleepingBearSystems.TemporaryDatabase.Common;
 namespace SleepingBearSystems.TemporaryDatabase.Postgres.Tests;
 
 /// <summary>
-/// Tests for <see cref="TemporaryDatabaseGuard"/>.
+///     Tests for <see cref="TemporaryDatabaseGuard" />.
 /// </summary>
 internal static class TemporaryDatabaseGuardTests
 {
+    private const string TestServerEnvironmentVariable = "SBS_TEST_SERVER_POSTGRES";
+
     [Test]
     public static void FromEnvironmentVariable_ValidatesBehavior()
     {
@@ -59,6 +61,4 @@ internal static class TemporaryDatabaseGuardTests
         Assert.That(PostgresHelper.CheckDatabaseExists(guard.Information, guard.Information.Database),
             Is.False);
     }
-
-    private const string TestServerEnvironmentVariable = "SBS_TEST_SERVER_POSTGRES";
 }

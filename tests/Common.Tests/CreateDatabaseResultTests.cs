@@ -1,7 +1,7 @@
 namespace SleepingBearSystems.TemporaryDatabase.Common.Tests;
 
 /// <summary>
-/// Tests for <see cref="DatabaseInformation"/>.
+///     Tests for <see cref="DatabaseInformation" />.
 /// </summary>
 internal static class CreateDatabaseResultTests
 {

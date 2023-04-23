@@ -6,12 +6,12 @@ using SleepingBearSystems.TemporaryDatabase.Common;
 namespace SleepingBearSystems.TemporaryDatabase.MySql;
 
 /// <summary>
-/// Helper methods for MySQL databases.
+///     Helper methods for MySQL databases.
 /// </summary>
 public static class MySqlHelper
 {
     /// <summary>
-    /// Creates a MySQL database.
+    ///     Creates a MySQL database.
     /// </summary>
     public static DatabaseInformation CreateDatabase(
         string connectionString,
@@ -37,7 +37,7 @@ public static class MySqlHelper
     }
 
     /// <summary>
-    /// Drops a MySQL database.
+    ///     Drops a MySQL database.
     /// </summary>
     public static void DropDatabase(DatabaseInformation information)
     {
@@ -52,7 +52,7 @@ public static class MySqlHelper
     }
 
     /// <summary>
-    /// Checks if a database exists.
+    ///     Checks if a database exists.
     /// </summary>
     public static bool CheckDatabaseExists(DatabaseInformation information, string database, bool ignoreCase = true)
     {
@@ -61,20 +61,19 @@ public static class MySqlHelper
         using var command = new MySqlCommand("SHOW DATABASES;", connection);
         using var reader = command.ExecuteReader();
         var databases = new List<string>();
-        while (reader.Read())
-        {
-            databases.Add(reader.GetString(0));
-        }
+        while (reader.Read()) databases.Add(reader.GetString(0));
 
         return databases.Contains(database, ignoreCase ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal);
     }
 
     /// <summary>
-    /// Gets the master database connection string.
+    ///     Gets the master database connection string.
     /// </summary>
-    public static string GetMasterConnectionString(string connectionString) =>
-        new MySqlConnectionStringBuilder(connectionString)
+    public static string GetMasterConnectionString(string connectionString)
+    {
+        return new MySqlConnectionStringBuilder(connectionString)
         {
             Database = "mysql"
         }.ToString();
+    }
 }

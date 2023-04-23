@@ -1,12 +1,12 @@
 ﻿namespace SleepingBearSystems.TemporaryDatabase.Common;
 
 /// <summary>
-/// Temporary database guard interface.
+///     Temporary database guard interface.
 /// </summary>
 public interface ITemporaryDatabaseGuard : IDisposable
 {
     /// <summary>
-    /// Connection string.
+    ///     Connection string.
     /// </summary>
     DatabaseInformation Information { get; }
 }

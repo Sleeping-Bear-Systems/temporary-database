@@ -12,7 +12,7 @@ public sealed class DatabaseOptions
     {
         Collation = default,
         CharacterSet = default,
-        Encrypted = false
+        Encryption = false
     };
 
     /// <summary>
@@ -26,7 +26,7 @@ public sealed class DatabaseOptions
     public string? CharacterSet { get; init; }
 
     /// <summary>
-    ///     Database encrypted flag.
+    ///     Database encryption flag.
     /// </summary>
-    public bool Encrypted { get; init; }
+    public bool Encryption { get; init; }
 }

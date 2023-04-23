@@ -27,7 +27,7 @@ public static class PostgresHelper
             .Append(CultureInfo.InvariantCulture, $"CREATE DATABASE {database}");
         if (!string.IsNullOrWhiteSpace(validOptions.Encoding))
         {
-            builder.Append(CultureInfo.InvariantCulture, $" ENCODING {validOptions.Encoding}");
+            builder.Append(CultureInfo.InvariantCulture, $" ENCODING '{validOptions.Encoding}'");
         }
 
         if (!string.IsNullOrWhiteSpace(validOptions.Collation))
@@ -37,7 +37,7 @@ public static class PostgresHelper
 
         if (!string.IsNullOrWhiteSpace(validOptions.CType))
         {
-            builder.Append(CultureInfo.InvariantCulture, $"LC_CTYPE {validOptions.CType}");
+            builder.Append(CultureInfo.InvariantCulture, $"LC_CTYPE '{validOptions.CType}'");
         }
 
         builder.Append(';');

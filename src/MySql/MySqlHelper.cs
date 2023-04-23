@@ -35,9 +35,9 @@ public static class MySqlHelper
             builder.Append(CultureInfo.InvariantCulture, $" COLLATE {validOptions.Collation}");
         }
 
-        if (validOptions.Encrypted)
+        if (validOptions.Encryption)
         {
-            builder.Append(CultureInfo.InvariantCulture, $" ENCRYPTED 'Y'");
+            builder.Append(CultureInfo.InvariantCulture, $" ENCRYPTION 'Y'");
         }
 
         builder.Append(';');

@@ -16,9 +16,9 @@ public static class MySqlHelper
     public static DatabaseInformation CreateDatabase(
         string connectionString,
         string database,
-        CreateDatabaseOptions? options = default)
+        DatabaseOptions? options = default)
     {
-        var validOptions = options ?? CreateDatabaseOptions.Defaults;
+        var validOptions = options ?? DatabaseOptions.Defaults;
         var masterConnectionString = GetMasterConnectionString(connectionString);
         using var connection = new MySqlConnection(masterConnectionString);
         connection.Open();

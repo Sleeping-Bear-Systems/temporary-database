@@ -1,14 +1,14 @@
-﻿namespace SleepingBearSystems.TemporaryDatabase.MySql;
+﻿namespace SleepingBearSystems.TemporaryDatabase.Postgres;
 
 /// <summary>
 ///     Temporary database guard configuration options.
 /// </summary>
-public sealed class CreateDatabaseOptions
+public sealed class DatabaseOptions
 {
     /// <summary>
     ///     Default options.
     /// </summary>
-    public static readonly CreateDatabaseOptions Defaults = new()
+    public static readonly DatabaseOptions Defaults = new()
     {
         Collation = default
     };

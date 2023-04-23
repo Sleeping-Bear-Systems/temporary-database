@@ -32,7 +32,7 @@ internal static class TemporaryDatabaseGuardTests
 
         // use case: custom options
         {
-            var options = new CreateDatabaseOptions
+            var options = new DatabaseOptions
             {
                 Collation = "latin1_swedish_ci"
             };

@@ -10,11 +10,23 @@ public sealed class DatabaseOptions
     /// </summary>
     public static readonly DatabaseOptions Defaults = new()
     {
-        Collation = default
+        Collation = default,
+        CType = default,
+        Encoding = default
     };
 
     /// <summary>
-    ///     Database collation.
+    ///     Database character set encoding.
+    /// </summary>
+    public string? Encoding { get; init; }
+
+    /// <summary>
+    ///     Database collation order.
     /// </summary>
     public string? Collation { get; init; }
+
+    /// <summary>
+    ///     Database character classification.
+    /// </summary>
+    public string? CType { get; init; }
 }

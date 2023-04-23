@@ -25,12 +25,23 @@ public static class MySqlHelper
 
         var builder = new StringBuilder()
             .Append(CultureInfo.InvariantCulture, $"CREATE DATABASE {database}");
+        if (!string.IsNullOrWhiteSpace(validOptions.CharacterSet))
+        {
+            builder.Append(CultureInfo.InvariantCulture, $" CHARACTER SET {validOptions.CharacterSet}");
+        }
+
         if (!string.IsNullOrWhiteSpace(validOptions.Collation))
         {
             builder.Append(CultureInfo.InvariantCulture, $" COLLATE {validOptions.Collation}");
         }
 
+        if (validOptions.Encrypted)
+        {
+            builder.Append(CultureInfo.InvariantCulture, $" ENCRYPTED 'Y'");
+        }
+
         builder.Append(';');
+
         using var command = new MySqlCommand(builder.ToString(), connection);
         command.ExecuteNonQuery();
         return new DatabaseInformation(connectionString, database);

@@ -5,25 +5,28 @@ using SleepingBearSystems.TemporaryDatabase.Common;
 namespace SleepingBearSystems.TemporaryDatabase.MySql.Tests;
 
 /// <summary>
-/// Tests for <see cref="TemporaryDatabaseGuard"/>.
+///     Tests for <see cref="TemporaryDatabaseGuard" />.
 /// </summary>
 internal static class TemporaryDatabaseGuardTests
 {
+    private const string TestServerEnvironmentVariable = "SBS_TEST_SERVER_MYSQL";
+
     [Test]
     public static void FromEnvironmentVariable_ValidatesBehavior()
     {
         // use case: default options
         {
-            ITemporaryDatabaseGuard guard = TemporaryDatabaseGuard.FromEnvironmentVariable(TestServerEnvironmentVariable);
+            ITemporaryDatabaseGuard guard =
+                TemporaryDatabaseGuard.FromEnvironmentVariable(TestServerEnvironmentVariable);
             using (guard)
             {
                 Assert.That(
-                    MySqlHelper.CheckDatabaseExists(guard.Result.MasterConnectionString, guard.Result.Database),
+                    MySqlHelper.CheckDatabaseExists(guard.Information, guard.Information.Database),
                     Is.True);
             }
 
             Assert.That(
-                MySqlHelper.CheckDatabaseExists(guard.Result.MasterConnectionString, guard.Result.Database),
+                MySqlHelper.CheckDatabaseExists(guard.Information, guard.Information.Database),
                 Is.False);
         }
 
@@ -33,14 +36,15 @@ internal static class TemporaryDatabaseGuardTests
             {
                 Collation = "latin1_swedish_ci"
             };
-            ITemporaryDatabaseGuard guard = TemporaryDatabaseGuard.FromEnvironmentVariable(TestServerEnvironmentVariable, options: options);
+            ITemporaryDatabaseGuard guard =
+                TemporaryDatabaseGuard.FromEnvironmentVariable(TestServerEnvironmentVariable, options: options);
             using (guard)
             {
                 Assert.That(
-                    MySqlHelper.CheckDatabaseExists(guard.Result.MasterConnectionString, guard.Result.Database),
+                    MySqlHelper.CheckDatabaseExists(guard.Information, guard.Information.Database),
                     Is.True);
                 var (characterSet, collation) =
-                    QueryCharacterSetCollation(guard.Result.MasterConnectionString, guard.Result.Database);
+                    QueryCharacterSetCollation(guard.Information, guard.Information.Database);
                 Assert.Multiple(() =>
                 {
                     Assert.That(characterSet, Is.EqualTo("latin1"));
@@ -49,7 +53,7 @@ internal static class TemporaryDatabaseGuardTests
             }
 
             Assert.That(
-                MySqlHelper.CheckDatabaseExists(guard.Result.MasterConnectionString, guard.Result.Database),
+                MySqlHelper.CheckDatabaseExists(guard.Information, guard.Information.Database),
                 Is.False);
         }
     }
@@ -69,11 +73,11 @@ internal static class TemporaryDatabaseGuardTests
                 builder.Password!);
             using (guard)
             {
-                Assert.That(MySqlHelper.CheckDatabaseExists(guard.Result.MasterConnectionString, guard.Result.Database),
+                Assert.That(MySqlHelper.CheckDatabaseExists(guard.Information, guard.Information.Database),
                     Is.True);
             }
 
-            Assert.That(MySqlHelper.CheckDatabaseExists(guard.Result.MasterConnectionString, guard.Result.Database),
+            Assert.That(MySqlHelper.CheckDatabaseExists(guard.Information, guard.Information.Database),
                 Is.False);
         }
     }
@@ -86,24 +90,22 @@ internal static class TemporaryDatabaseGuardTests
         ITemporaryDatabaseGuard guard = TemporaryDatabaseGuard.FromConnectionString(connectionString!);
         using (guard)
         {
-            Assert.That(MySqlHelper.CheckDatabaseExists(guard.Result.MasterConnectionString, guard.Result.Database),
+            Assert.That(MySqlHelper.CheckDatabaseExists(guard.Information, guard.Information.Database),
                 Is.True);
         }
 
-        Assert.That(MySqlHelper.CheckDatabaseExists(guard.Result.MasterConnectionString, guard.Result.Database),
+        Assert.That(MySqlHelper.CheckDatabaseExists(guard.Information, guard.Information.Database),
             Is.False);
     }
 
-    private const string TestServerEnvironmentVariable = "SBS_TEST_SERVER_MYSQL";
-
-    private static (string, string) QueryCharacterSetCollation(string masterConnectionString, string database)
+    private static (string, string) QueryCharacterSetCollation(DatabaseInformation information, string database)
     {
+        var masterConnectionString = MySqlHelper.GetMasterConnectionString(information.ConnectionString);
         var connection = new MySqlConnection(masterConnectionString);
         connection.Open();
         var cmdText =
             string.Format(
                 CultureInfo.InvariantCulture,
-                format:
                 "SELECT DEFAULT_CHARACTER_SET_NAME, DEFAULT_COLLATION_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{0}';",
                 database);
         var command = new MySqlCommand(cmdText, connection);

@@ -6,14 +6,14 @@ using SleepingBearSystems.TemporaryDatabase.Common;
 namespace SleepingBearSystems.TemporaryDatabase.Postgres;
 
 /// <summary>
-/// Helper methods for Postgres databases.
+///     Helper methods for Postgres databases.
 /// </summary>
 public static class PostgresHelper
 {
     /// <summary>
-    /// Creates a Postgres database.
+    ///     Creates a Postgres database.
     /// </summary>
-    public static CreateDatabaseResult CreateDatabase(
+    public static DatabaseInformation CreateDatabase(
         string connectionString,
         string database,
         CreateDatabaseOptions? options = default)
@@ -33,49 +33,49 @@ public static class PostgresHelper
         builder.Append(';');
         using var command = new NpgsqlCommand(builder.ToString(), connection);
         command.ExecuteNonQuery();
-        return new CreateDatabaseResult(masterConnectionString, connectionString, database);
+        return new DatabaseInformation(connectionString, database);
     }
 
     /// <summary>
-    /// Drops a Postgres database.
+    ///     Drops a Postgres database.
     /// </summary>
-    public static void DropDatabase(CreateDatabaseResult result)
+    public static void DropDatabase(DatabaseInformation information)
     {
-        using var connection = new NpgsqlConnection(result.MasterConnectionString);
+        using var connection = new NpgsqlConnection(GetMasterConnectionString(information.ConnectionString));
         connection.Open();
         var cmdText = string.Format(
             CultureInfo.InvariantCulture,
             "DROP DATABASE IF EXISTS {0} WITH (FORCE);",
-            result.Database);
+            information.Database);
         using var command = new NpgsqlCommand(cmdText, connection);
         command.ExecuteNonQuery();
     }
 
     /// <summary>
-    /// Checks if a database exists.
+    ///     Checks if a database exists.
     /// </summary>
-    public static bool CheckDatabaseExists(string masterConnectionString, string database, bool ignoreCase = true)
+    public static bool CheckDatabaseExists(DatabaseInformation information, string database, bool ignoreCase = true)
     {
+        var masterConnectionString = GetMasterConnectionString(information.ConnectionString);
         using var connection = new NpgsqlConnection(masterConnectionString);
         connection.Open();
         // ReSharper disable once StringLiteralTypo
         using var command = new NpgsqlCommand("SELECT datname FROM pg_database", connection);
         using var reader = command.ExecuteReader();
         var databases = new List<string>();
-        while (reader.Read())
-        {
-            databases.Add(reader.GetString(0));
-        }
+        while (reader.Read()) databases.Add(reader.GetString(0));
 
         return databases.Contains(database, ignoreCase ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal);
     }
 
     /// <summary>
-    /// Gets the master database connection string.
+    ///     Gets the master database connection string.
     /// </summary>
-    private static string GetMasterConnectionString(string connectionString) =>
-        new NpgsqlConnectionStringBuilder(connectionString)
+    public static string GetMasterConnectionString(string connectionString)
+    {
+        return new NpgsqlConnectionStringBuilder(connectionString)
         {
             Database = "postgres"
         }.ToString();
+    }
 }

@@ -4,21 +4,23 @@ using SleepingBearSystems.TemporaryDatabase.Common;
 namespace SleepingBearSystems.TemporaryDatabase.Postgres.Tests;
 
 /// <summary>
-/// Tests for <see cref="TemporaryDatabaseGuard"/>.
+///     Tests for <see cref="TemporaryDatabaseGuard" />.
 /// </summary>
 internal static class TemporaryDatabaseGuardTests
 {
+    private const string TestServerEnvironmentVariable = "SBS_TEST_SERVER_POSTGRES";
+
     [Test]
     public static void FromEnvironmentVariable_ValidatesBehavior()
     {
         ITemporaryDatabaseGuard guard = TemporaryDatabaseGuard.FromEnvironmentVariable(TestServerEnvironmentVariable);
         using (guard)
         {
-            Assert.That(PostgresHelper.CheckDatabaseExists(guard.Result.MasterConnectionString, guard.Result.Database),
+            Assert.That(PostgresHelper.CheckDatabaseExists(guard.Information, guard.Information.Database),
                 Is.True);
         }
 
-        Assert.That(PostgresHelper.CheckDatabaseExists(guard.Result.MasterConnectionString, guard.Result.Database),
+        Assert.That(PostgresHelper.CheckDatabaseExists(guard.Information, guard.Information.Database),
             Is.False);
     }
 
@@ -36,11 +38,11 @@ internal static class TemporaryDatabaseGuardTests
                 builder.Password!);
         using (guard)
         {
-            Assert.That(PostgresHelper.CheckDatabaseExists(guard.Result.MasterConnectionString, guard.Result.Database),
+            Assert.That(PostgresHelper.CheckDatabaseExists(guard.Information, guard.Information.Database),
                 Is.True);
         }
 
-        Assert.That(PostgresHelper.CheckDatabaseExists(guard.Result.MasterConnectionString, guard.Result.Database),
+        Assert.That(PostgresHelper.CheckDatabaseExists(guard.Information, guard.Information.Database),
             Is.False);
     }
 
@@ -52,13 +54,11 @@ internal static class TemporaryDatabaseGuardTests
         ITemporaryDatabaseGuard guard = TemporaryDatabaseGuard.FromConnectionString(connectionString!);
         using (guard)
         {
-            Assert.That(PostgresHelper.CheckDatabaseExists(guard.Result.MasterConnectionString, guard.Result.Database),
+            Assert.That(PostgresHelper.CheckDatabaseExists(guard.Information, guard.Information.Database),
                 Is.True);
         }
 
-        Assert.That(PostgresHelper.CheckDatabaseExists(guard.Result.MasterConnectionString, guard.Result.Database),
+        Assert.That(PostgresHelper.CheckDatabaseExists(guard.Information, guard.Information.Database),
             Is.False);
     }
-
-    private const string TestServerEnvironmentVariable = "SBS_TEST_SERVER_POSTGRES";
 }

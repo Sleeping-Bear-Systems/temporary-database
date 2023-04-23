@@ -1,20 +1,20 @@
 ﻿namespace SleepingBearSystems.TemporaryDatabase.Common;
 
 /// <summary>
-/// Abstract base class for temporary database guard implementations.
+///     Abstract base class for temporary database guard implementations.
 /// </summary>
 public abstract class TemporaryDatabaseGuardBase
 {
     /// <summary>
-    /// Constructor
+    ///     Constructor
     /// </summary>
-    protected TemporaryDatabaseGuardBase(CreateDatabaseResult result)
+    protected TemporaryDatabaseGuardBase(DatabaseInformation information)
     {
-        this.Result = result ?? throw new ArgumentNullException(nameof(result));
+        this.Information = information ?? throw new ArgumentNullException(nameof(information));
     }
 
     /// <summary>
-    /// Gets the create database result.
+    ///     Gets the create database result.
     /// </summary>
-    public CreateDatabaseResult Result { get; }
+    public DatabaseInformation Information { get; }
 }

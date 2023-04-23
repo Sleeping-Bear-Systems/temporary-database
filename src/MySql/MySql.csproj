@@ -19,19 +19,19 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="MySql.Data" Version="8.0.33"/>
+    <PackageReference Include="MySql.Data" Version="8.0.33" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\icon.png" Pack="true" PackagePath="\"/>
+    <None Include="..\icon.png" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <ItemGroup>
-    <InternalsVisibleTo Include="$(AssemblyName).Test"/>
+    <InternalsVisibleTo Include="$(AssemblyName).Test" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common\Common.csproj"/>
+    <ProjectReference Include="..\Common\Common.csproj" />
   </ItemGroup>
 
 </Project>

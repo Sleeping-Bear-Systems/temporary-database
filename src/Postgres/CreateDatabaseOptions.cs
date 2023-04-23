@@ -1,4 +1,4 @@
-﻿namespace SleepingBearSystems.TemporaryDatabase.Common;
+﻿namespace SleepingBearSystems.TemporaryDatabase.Postgres;
 
 /// <summary>
 ///     Temporary database guard configuration options.

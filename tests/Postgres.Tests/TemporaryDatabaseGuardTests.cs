@@ -58,20 +58,23 @@ internal static class TemporaryDatabaseGuardTests
         var connectionString = Environment.GetEnvironmentVariable(TestServerEnvironmentVariable);
         var builder = new NpgsqlConnectionStringBuilder(connectionString);
 
-        ITemporaryDatabaseGuard guard =
-            TemporaryDatabaseGuard.FromParameters(
-                builder.Host!,
-                (ushort)builder.Port,
-                builder.Username!,
-                builder.Password!);
-        using (guard)
+        // use case: default options
         {
-            Assert.That(PostgresHelper.CheckDatabaseExists(guard.Information, guard.Information.Database),
-                Is.True);
-        }
+            ITemporaryDatabaseGuard guard =
+                TemporaryDatabaseGuard.FromParameters(
+                    builder.Host!,
+                    (ushort)builder.Port,
+                    builder.Username!,
+                    builder.Password!);
+            using (guard)
+            {
+                Assert.That(PostgresHelper.CheckDatabaseExists(guard.Information, guard.Information.Database),
+                    Is.True);
+            }
 
-        Assert.That(PostgresHelper.CheckDatabaseExists(guard.Information, guard.Information.Database),
-            Is.False);
+            Assert.That(PostgresHelper.CheckDatabaseExists(guard.Information, guard.Information.Database),
+                Is.False);
+        }
     }
 
     [Test]

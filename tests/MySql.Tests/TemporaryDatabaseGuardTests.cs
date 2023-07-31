@@ -35,8 +35,7 @@ internal static class TemporaryDatabaseGuardTests
             var options = new DatabaseOptions
             {
                 CharacterSet = "latin1",
-                Collation = "latin1_swedish_ci",
-                Encryption = true
+                Collation = "latin1_swedish_ci"
             };
             ITemporaryDatabaseGuard guard =
                 TemporaryDatabaseGuard.FromEnvironmentVariable(TestServerEnvironmentVariable, options: options);

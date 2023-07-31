@@ -11,8 +11,7 @@ public sealed class DatabaseOptions
     public static readonly DatabaseOptions Defaults = new()
     {
         Collation = default,
-        CharacterSet = default,
-        Encryption = false
+        CharacterSet = default
     };
 
     /// <summary>
@@ -24,9 +23,4 @@ public sealed class DatabaseOptions
     ///     Database character set.
     /// </summary>
     public string? CharacterSet { get; init; }
-
-    /// <summary>
-    ///     Database encryption flag.
-    /// </summary>
-    public bool Encryption { get; init; }
 }

@@ -8,7 +8,7 @@ namespace SleepingBearSystems.TemporaryDatabase.MySql;
 /// <summary>
 ///     Helper methods for MySQL databases.
 /// </summary>
-public static class MySqlHelper
+internal static class MySqlHelper
 {
     /// <summary>
     ///     Creates a MySQL database.
@@ -27,17 +27,12 @@ public static class MySqlHelper
             .Append(CultureInfo.InvariantCulture, $"CREATE DATABASE {database}");
         if (!string.IsNullOrWhiteSpace(validOptions.CharacterSet))
         {
-            builder.Append(CultureInfo.InvariantCulture, $" CHARACTER SET {validOptions.CharacterSet}");
+            builder.Append(CultureInfo.InvariantCulture, $" CHARACTER SET = {validOptions.CharacterSet}");
         }
 
         if (!string.IsNullOrWhiteSpace(validOptions.Collation))
         {
             builder.Append(CultureInfo.InvariantCulture, $" COLLATE {validOptions.Collation}");
-        }
-
-        if (validOptions.Encryption)
-        {
-            builder.Append(CultureInfo.InvariantCulture, $" ENCRYPTION 'Y'");
         }
 
         builder.Append(';');

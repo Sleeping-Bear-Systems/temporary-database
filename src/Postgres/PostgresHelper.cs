@@ -8,7 +8,7 @@ namespace SleepingBearSystems.TemporaryDatabase.Postgres;
 /// <summary>
 ///     Helper methods for Postgres databases.
 /// </summary>
-public static class PostgresHelper
+internal static class PostgresHelper
 {
     /// <summary>
     ///     Creates a Postgres database.

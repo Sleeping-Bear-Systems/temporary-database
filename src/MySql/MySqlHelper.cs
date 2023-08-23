@@ -35,10 +35,14 @@ internal static class MySqlHelper
         var builder = new StringBuilder()
             .Append(CultureInfo.InvariantCulture, $"CREATE DATABASE {database}");
         if (!string.IsNullOrWhiteSpace(validOptions.CharacterSet))
+        {
             builder.Append(CultureInfo.InvariantCulture, $" CHARACTER SET = {validOptions.CharacterSet}");
+        }
 
         if (!string.IsNullOrWhiteSpace(validOptions.Collation))
+        {
             builder.Append(CultureInfo.InvariantCulture, $" COLLATE {validOptions.Collation}");
+        }
 
         builder.Append(';');
 
@@ -73,7 +77,10 @@ internal static class MySqlHelper
         using var command = new MySqlCommand("SHOW DATABASES;", connection);
         using var reader = command.ExecuteReader();
         var databases = new List<string>();
-        while (reader.Read()) databases.Add(reader.GetString(0));
+        while (reader.Read())
+        {
+            databases.Add(reader.GetString(0));
+        }
 
         return databases.Contains(database, ignoreCase ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal);
     }

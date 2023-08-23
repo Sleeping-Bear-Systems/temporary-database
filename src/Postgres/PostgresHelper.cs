@@ -33,13 +33,19 @@ internal static class PostgresHelper
         var builder = new StringBuilder()
             .Append(CultureInfo.InvariantCulture, $"CREATE DATABASE {database}");
         if (!string.IsNullOrWhiteSpace(validOptions.Encoding))
+        {
             builder.Append(CultureInfo.InvariantCulture, $" ENCODING '{validOptions.Encoding}'");
+        }
 
         if (!string.IsNullOrWhiteSpace(validOptions.Collation))
+        {
             builder.Append(CultureInfo.InvariantCulture, $" LC_COLLATE '{validOptions.Collation}'");
+        }
 
         if (!string.IsNullOrWhiteSpace(validOptions.CType))
+        {
             builder.Append(CultureInfo.InvariantCulture, $"LC_CTYPE '{validOptions.CType}'");
+        }
 
         builder.Append(';');
 
@@ -76,7 +82,10 @@ internal static class PostgresHelper
         using var command = new NpgsqlCommand("SELECT datname FROM pg_database", connection);
         using var reader = command.ExecuteReader();
         var databases = new List<string>();
-        while (reader.Read()) databases.Add(reader.GetString(0));
+        while (reader.Read())
+        {
+            databases.Add(reader.GetString(0));
+        }
 
         return databases.Contains(database, ignoreCase ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal);
     }

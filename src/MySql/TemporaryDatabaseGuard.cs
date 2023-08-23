@@ -64,7 +64,10 @@ public sealed class TemporaryDatabaseGuard : TemporaryDatabaseGuardBase, ITempor
             UserID = userId,
             Password = password
         };
-        if (port.HasValue) builder.Port = port.Value;
+        if (port.HasValue)
+        {
+            builder.Port = port.Value;
+        }
 
         return FromConnectionString(builder.ToString(), prefix, options);
     }

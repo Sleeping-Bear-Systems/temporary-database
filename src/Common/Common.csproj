@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>SleepingBearSystems.TemporaryDatabase.Common</AssemblyName>
+    <IsPackable>true</IsPackable>
     <RootNamespace>SleepingBearSystems.TemporaryDatabase.Common</RootNamespace>
     <TargetFramework>net7.0</TargetFramework>
   </PropertyGroup>

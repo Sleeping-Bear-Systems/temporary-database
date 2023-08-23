@@ -16,7 +16,7 @@ public sealed class TemporaryDatabaseGuard : TemporaryDatabaseGuardBase, ITempor
     /// <inheritdoc cref="IDisposable" />
     public void Dispose()
     {
-        PostgresHelper.DropDatabase(this.Information);
+        this.Information.DropDatabase();
     }
 
     /// <summary>

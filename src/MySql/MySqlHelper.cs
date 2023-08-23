@@ -19,7 +19,16 @@ internal static class MySqlHelper
         DatabaseOptions? options = default)
     {
         var validOptions = options ?? DatabaseOptions.Defaults;
-        var masterConnectionString = GetMasterConnectionString(connectionString);
+        var connectionStringBuilder = new MySqlConnectionStringBuilder(connectionString)
+        {
+            SslMode = validOptions.SslMode,
+            Database = database
+        };
+
+        var databaseConnectionString = connectionStringBuilder.ToString();
+
+        connectionStringBuilder.Database = "mysql";
+        var masterConnectionString = connectionStringBuilder.ToString();
         using var connection = new MySqlConnection(masterConnectionString);
         connection.Open();
 
@@ -39,15 +48,15 @@ internal static class MySqlHelper
 
         using var command = new MySqlCommand(builder.ToString(), connection);
         command.ExecuteNonQuery();
-        return new DatabaseInformation(connectionString, database);
+        return new DatabaseInformation(databaseConnectionString, database);
     }
 
     /// <summary>
     ///     Drops a MySQL database.
     /// </summary>
-    public static void DropDatabase(DatabaseInformation information)
+    public static void DropDatabase(this DatabaseInformation information)
     {
-        using var connection = new MySqlConnection(GetMasterConnectionString(information.ConnectionString));
+        using var connection = new MySqlConnection(information.ToMasterConnectionString());
         connection.Open();
         var cmdText = string.Format(
             CultureInfo.InvariantCulture,
@@ -60,24 +69,25 @@ internal static class MySqlHelper
     /// <summary>
     ///     Checks if a database exists.
     /// </summary>
-    public static bool CheckDatabaseExists(DatabaseInformation information, string database, bool ignoreCase = true)
+    public static bool CheckDatabaseExists(this DatabaseInformation information, string database,
+        bool ignoreCase = true)
     {
-        using var connection = new MySqlConnection(GetMasterConnectionString(information.ConnectionString));
+        using var connection = new MySqlConnection(information.ToMasterConnectionString());
         connection.Open();
         using var command = new MySqlCommand("SHOW DATABASES;", connection);
         using var reader = command.ExecuteReader();
         var databases = new List<string>();
-        while (reader.Read()) databases.Add(reader.GetString(0));
+        while (reader.Read())
+        {
+            databases.Add(reader.GetString(0));
+        }
 
         return databases.Contains(database, ignoreCase ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal);
     }
 
-    /// <summary>
-    ///     Gets the master database connection string.
-    /// </summary>
-    public static string GetMasterConnectionString(string connectionString)
+    private static string ToMasterConnectionString(this DatabaseInformation information)
     {
-        return new MySqlConnectionStringBuilder(connectionString)
+        return new MySqlConnectionStringBuilder(information.ConnectionString)
         {
             Database = "mysql"
         }.ToString();

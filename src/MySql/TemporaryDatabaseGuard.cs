@@ -16,7 +16,7 @@ public sealed class TemporaryDatabaseGuard : TemporaryDatabaseGuardBase, ITempor
     /// <inheritdoc cref="IDisposable" />
     public void Dispose()
     {
-        MySqlHelper.DropDatabase(this.Information);
+        this.Information.DropDatabase();
     }
 
     /// <summary>
@@ -80,10 +80,11 @@ public sealed class TemporaryDatabaseGuard : TemporaryDatabaseGuardBase, ITempor
         string? prefix = default,
         DatabaseOptions? options = default)
     {
+        var validOptions = options ?? DatabaseOptions.Defaults;
         var result = MySqlHelper.CreateDatabase(
             connectionString,
             DatabaseHelper.GenerateDatabaseName(prefix),
-            options ?? DatabaseOptions.Defaults);
+            validOptions);
 
         return new TemporaryDatabaseGuard(result);
     }

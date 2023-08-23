@@ -1,4 +1,6 @@
-﻿namespace SleepingBearSystems.TemporaryDatabase.MySql;
+﻿using MySql.Data.MySqlClient;
+
+namespace SleepingBearSystems.TemporaryDatabase.MySql;
 
 /// <summary>
 ///     Temporary database guard configuration options.
@@ -11,7 +13,8 @@ public sealed class DatabaseOptions
     public static readonly DatabaseOptions Defaults = new()
     {
         Collation = default,
-        CharacterSet = default
+        CharacterSet = default,
+        SslMode = MySqlSslMode.Disabled
     };
 
     /// <summary>
@@ -23,4 +26,9 @@ public sealed class DatabaseOptions
     ///     Database character set.
     /// </summary>
     public string? CharacterSet { get; init; }
+
+    /// <summary>
+    ///     SSL Mode.
+    /// </summary>
+    public MySqlSslMode SslMode { get; init; }
 }

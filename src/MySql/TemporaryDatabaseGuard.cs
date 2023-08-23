@@ -80,10 +80,11 @@ public sealed class TemporaryDatabaseGuard : TemporaryDatabaseGuardBase, ITempor
         string? prefix = default,
         DatabaseOptions? options = default)
     {
+        var validOptions = options ?? DatabaseOptions.Defaults;
         var result = MySqlHelper.CreateDatabase(
             connectionString,
             DatabaseHelper.GenerateDatabaseName(prefix),
-            options ?? DatabaseOptions.Defaults);
+            validOptions);
 
         return new TemporaryDatabaseGuard(result);
     }

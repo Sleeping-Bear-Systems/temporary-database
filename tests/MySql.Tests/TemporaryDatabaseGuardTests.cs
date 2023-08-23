@@ -101,7 +101,7 @@ internal static class TemporaryDatabaseGuardTests
 
     private static (string, string) QueryCharacterSetCollation(DatabaseInformation information, string database)
     {
-        var masterConnectionString = MySqlHelper.GetMasterConnectionString(information.ConnectionString);
+        var masterConnectionString = MySqlHelper.GetMasterConnectionString(information.ConnectionString, DatabaseOptions.Defaults);
         var connection = new MySqlConnection(masterConnectionString);
         connection.Open();
         var cmdText =

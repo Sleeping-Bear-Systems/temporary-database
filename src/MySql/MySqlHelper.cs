@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Diagnostics;
+using System.Globalization;
 using System.Text;
 using MySql.Data.MySqlClient;
 using SleepingBearSystems.TemporaryDatabase.Common;
@@ -19,7 +20,7 @@ internal static class MySqlHelper
         DatabaseOptions? options = default)
     {
         var validOptions = options ?? DatabaseOptions.Defaults;
-        var masterConnectionString = GetMasterConnectionString(connectionString);
+        var masterConnectionString = GetMasterConnectionString(connectionString, validOptions);
         using var connection = new MySqlConnection(masterConnectionString);
         connection.Open();
 
@@ -47,7 +48,7 @@ internal static class MySqlHelper
     /// </summary>
     public static void DropDatabase(DatabaseInformation information)
     {
-        using var connection = new MySqlConnection(GetMasterConnectionString(information.ConnectionString));
+        using var connection = new MySqlConnection(GetMasterConnectionString(information.ConnectionString, DatabaseOptions.Defaults));
         connection.Open();
         var cmdText = string.Format(
             CultureInfo.InvariantCulture,
@@ -62,7 +63,7 @@ internal static class MySqlHelper
     /// </summary>
     public static bool CheckDatabaseExists(DatabaseInformation information, string database, bool ignoreCase = true)
     {
-        using var connection = new MySqlConnection(GetMasterConnectionString(information.ConnectionString));
+        using var connection = new MySqlConnection(GetMasterConnectionString(information.ConnectionString, DatabaseOptions.Defaults));
         connection.Open();
         using var command = new MySqlCommand("SHOW DATABASES;", connection);
         using var reader = command.ExecuteReader();
@@ -75,11 +76,13 @@ internal static class MySqlHelper
     /// <summary>
     ///     Gets the master database connection string.
     /// </summary>
-    public static string GetMasterConnectionString(string connectionString)
+    public static string GetMasterConnectionString(string connectionString, DatabaseOptions options)
     {
         return new MySqlConnectionStringBuilder(connectionString)
         {
-            Database = "mysql"
+            Database = "mysql",
+            SslMode = options.SslMode
         }.ToString();
+
     }
 }

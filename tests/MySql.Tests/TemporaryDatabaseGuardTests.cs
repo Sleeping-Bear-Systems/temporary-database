@@ -35,7 +35,8 @@ internal static class TemporaryDatabaseGuardTests
             var options = new DatabaseOptions
             {
                 CharacterSet = "latin1",
-                Collation = "latin1_swedish_ci"
+                Collation = "latin1_swedish_ci",
+                SslMode = MySqlSslMode.Required
             };
             ITemporaryDatabaseGuard guard =
                 TemporaryDatabaseGuard.FromEnvironmentVariable(TestServerEnvironmentVariable, options: options);
@@ -101,7 +102,10 @@ internal static class TemporaryDatabaseGuardTests
 
     private static (string, string) QueryCharacterSetCollation(DatabaseInformation information, string database)
     {
-        var masterConnectionString = MySqlHelper.GetMasterConnectionString(information.ConnectionString, DatabaseOptions.Defaults);
+        var masterConnectionString = new MySqlConnectionStringBuilder(information.ConnectionString)
+        {
+            Database = "mysql"
+        }.ToString();
         var connection = new MySqlConnection(masterConnectionString);
         connection.Open();
         var cmdText =

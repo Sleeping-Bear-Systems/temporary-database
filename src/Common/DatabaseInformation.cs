@@ -10,8 +10,8 @@ public sealed class DatabaseInformation
     /// </summary>
     public DatabaseInformation(string connectionString, string database)
     {
-        ConnectionString = connectionString;
-        Database = database;
+        this.ConnectionString = connectionString;
+        this.Database = database;
     }
 
     /// <summary>

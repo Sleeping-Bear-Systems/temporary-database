@@ -16,7 +16,7 @@ public sealed class TemporaryDatabaseGuard : TemporaryDatabaseGuardBase, ITempor
     /// <inheritdoc cref="IDisposable" />
     public void Dispose()
     {
-        Information.DropDatabase();
+        this.Information.DropDatabase();
     }
 
     /// <summary>

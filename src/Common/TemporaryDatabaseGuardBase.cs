@@ -10,7 +10,7 @@ public abstract class TemporaryDatabaseGuardBase
     /// </summary>
     protected TemporaryDatabaseGuardBase(DatabaseInformation information)
     {
-        this.Information = information ?? throw new ArgumentNullException(nameof(information));
+        Information = information ?? throw new ArgumentNullException(nameof(information));
     }
 
     /// <summary>

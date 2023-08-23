@@ -16,7 +16,7 @@ public sealed class TemporaryDatabaseGuard : TemporaryDatabaseGuardBase, ITempor
     /// <inheritdoc cref="IDisposable" />
     public void Dispose()
     {
-        MySqlHelper.DropDatabase(this.Information);
+        Information.DropDatabase();
     }
 
     /// <summary>
@@ -64,10 +64,7 @@ public sealed class TemporaryDatabaseGuard : TemporaryDatabaseGuardBase, ITempor
             UserID = userId,
             Password = password
         };
-        if (port.HasValue)
-        {
-            builder.Port = port.Value;
-        }
+        if (port.HasValue) builder.Port = port.Value;
 
         return FromConnectionString(builder.ToString(), prefix, options);
     }

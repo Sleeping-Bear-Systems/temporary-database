@@ -21,12 +21,12 @@ internal static class TemporaryDatabaseGuardTests
             using (guard)
             {
                 Assert.That(
-                    MySqlHelper.CheckDatabaseExists(guard.Information, guard.Information.Database),
+                    guard.Information.CheckDatabaseExists(guard.Information.Database),
                     Is.True);
             }
 
             Assert.That(
-                MySqlHelper.CheckDatabaseExists(guard.Information, guard.Information.Database),
+                guard.Information.CheckDatabaseExists(guard.Information.Database),
                 Is.False);
         }
 
@@ -36,14 +36,14 @@ internal static class TemporaryDatabaseGuardTests
             {
                 CharacterSet = "latin1",
                 Collation = "latin1_swedish_ci",
-                SslMode = MySqlSslMode.Required
+                SslMode = MySqlSslMode.Disabled
             };
             ITemporaryDatabaseGuard guard =
                 TemporaryDatabaseGuard.FromEnvironmentVariable(TestServerEnvironmentVariable, options: options);
             using (guard)
             {
                 Assert.That(
-                    MySqlHelper.CheckDatabaseExists(guard.Information, guard.Information.Database),
+                    guard.Information.CheckDatabaseExists(guard.Information.Database),
                     Is.True);
                 var (characterSet, collation) =
                     QueryCharacterSetCollation(guard.Information, guard.Information.Database);
@@ -55,7 +55,7 @@ internal static class TemporaryDatabaseGuardTests
             }
 
             Assert.That(
-                MySqlHelper.CheckDatabaseExists(guard.Information, guard.Information.Database),
+                guard.Information.CheckDatabaseExists(guard.Information.Database),
                 Is.False);
         }
     }
@@ -75,11 +75,11 @@ internal static class TemporaryDatabaseGuardTests
                 builder.Password!);
             using (guard)
             {
-                Assert.That(MySqlHelper.CheckDatabaseExists(guard.Information, guard.Information.Database),
+                Assert.That(guard.Information.CheckDatabaseExists(guard.Information.Database),
                     Is.True);
             }
 
-            Assert.That(MySqlHelper.CheckDatabaseExists(guard.Information, guard.Information.Database),
+            Assert.That(guard.Information.CheckDatabaseExists(guard.Information.Database),
                 Is.False);
         }
     }
@@ -92,11 +92,11 @@ internal static class TemporaryDatabaseGuardTests
         ITemporaryDatabaseGuard guard = TemporaryDatabaseGuard.FromConnectionString(connectionString!);
         using (guard)
         {
-            Assert.That(MySqlHelper.CheckDatabaseExists(guard.Information, guard.Information.Database),
+            Assert.That(guard.Information.CheckDatabaseExists(guard.Information.Database),
                 Is.True);
         }
 
-        Assert.That(MySqlHelper.CheckDatabaseExists(guard.Information, guard.Information.Database),
+        Assert.That(guard.Information.CheckDatabaseExists(guard.Information.Database),
             Is.False);
     }
 

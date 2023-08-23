@@ -19,43 +19,40 @@ internal static class MySqlHelper
         DatabaseOptions? options = default)
     {
         var validOptions = options ?? DatabaseOptions.Defaults;
-        var masterConnectionString = new MySqlConnectionStringBuilder(connectionString)
+        var connectionStringBuilder = new MySqlConnectionStringBuilder(connectionString)
         {
-            Database = "mysql",
-            SslMode = validOptions.SslMode
-        }.ToString();
+            SslMode = validOptions.SslMode,
+            Database = database
+        };
+
+        var databaseConnectionString = connectionStringBuilder.ToString();
+
+        connectionStringBuilder.Database = "mysql";
+        var masterConnectionString = connectionStringBuilder.ToString();
         using var connection = new MySqlConnection(masterConnectionString);
         connection.Open();
 
         var builder = new StringBuilder()
             .Append(CultureInfo.InvariantCulture, $"CREATE DATABASE {database}");
         if (!string.IsNullOrWhiteSpace(validOptions.CharacterSet))
-        {
             builder.Append(CultureInfo.InvariantCulture, $" CHARACTER SET = {validOptions.CharacterSet}");
-        }
 
         if (!string.IsNullOrWhiteSpace(validOptions.Collation))
-        {
             builder.Append(CultureInfo.InvariantCulture, $" COLLATE {validOptions.Collation}");
-        }
 
         builder.Append(';');
 
         using var command = new MySqlCommand(builder.ToString(), connection);
         command.ExecuteNonQuery();
-        return new DatabaseInformation(connectionString, database);
+        return new DatabaseInformation(databaseConnectionString, database);
     }
 
     /// <summary>
     ///     Drops a MySQL database.
     /// </summary>
-    public static void DropDatabase(DatabaseInformation information)
+    public static void DropDatabase(this DatabaseInformation information)
     {
-        var connectionString= new MySqlConnectionStringBuilder(information.ConnectionString)
-        {
-            Database = "mysql"
-        }.ToString();
-        using var connection = new MySqlConnection(connectionString);
+        using var connection = new MySqlConnection(information.ToMasterConnectionString());
         connection.Open();
         var cmdText = string.Format(
             CultureInfo.InvariantCulture,
@@ -68,13 +65,10 @@ internal static class MySqlHelper
     /// <summary>
     ///     Checks if a database exists.
     /// </summary>
-    public static bool CheckDatabaseExists(DatabaseInformation information, string database, bool ignoreCase = true)
+    public static bool CheckDatabaseExists(this DatabaseInformation information, string database,
+        bool ignoreCase = true)
     {
-        var connectionString = new MySqlConnectionStringBuilder(information.ConnectionString)
-        {
-            Database = "mysql"
-        }.ToString();
-        using var connection = new MySqlConnection(connectionString);
+        using var connection = new MySqlConnection(information.ToMasterConnectionString());
         connection.Open();
         using var command = new MySqlCommand("SHOW DATABASES;", connection);
         using var reader = command.ExecuteReader();
@@ -82,5 +76,13 @@ internal static class MySqlHelper
         while (reader.Read()) databases.Add(reader.GetString(0));
 
         return databases.Contains(database, ignoreCase ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal);
+    }
+
+    private static string ToMasterConnectionString(this DatabaseInformation information)
+    {
+        return new MySqlConnectionStringBuilder(information.ConnectionString)
+        {
+            Database = "mysql"
+        }.ToString();
     }
 }

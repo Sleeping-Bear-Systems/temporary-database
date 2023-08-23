@@ -20,12 +20,12 @@ internal static class TemporaryDatabaseGuardTests
             using (guard)
             {
                 Assert.That(
-                    PostgresHelper.CheckDatabaseExists(guard.Information, guard.Information.Database),
+                    guard.Information.CheckDatabaseExists(guard.Information.Database),
                     Is.True);
             }
 
             Assert.That(
-                PostgresHelper.CheckDatabaseExists(guard.Information, guard.Information.Database),
+                guard.Information.CheckDatabaseExists(guard.Information.Database),
                 Is.False);
         }
 
@@ -42,12 +42,12 @@ internal static class TemporaryDatabaseGuardTests
             using (guard)
             {
                 Assert.That(
-                    PostgresHelper.CheckDatabaseExists(guard.Information, guard.Information.Database),
+                    guard.Information.CheckDatabaseExists(guard.Information.Database),
                     Is.True);
             }
 
             Assert.That(
-                PostgresHelper.CheckDatabaseExists(guard.Information, guard.Information.Database),
+                guard.Information.CheckDatabaseExists(guard.Information.Database),
                 Is.False);
         }
     }
@@ -68,11 +68,11 @@ internal static class TemporaryDatabaseGuardTests
                     builder.Password!);
             using (guard)
             {
-                Assert.That(PostgresHelper.CheckDatabaseExists(guard.Information, guard.Information.Database),
+                Assert.That(guard.Information.CheckDatabaseExists(guard.Information.Database),
                     Is.True);
             }
 
-            Assert.That(PostgresHelper.CheckDatabaseExists(guard.Information, guard.Information.Database),
+            Assert.That(guard.Information.CheckDatabaseExists(guard.Information.Database),
                 Is.False);
         }
     }
@@ -85,11 +85,11 @@ internal static class TemporaryDatabaseGuardTests
         ITemporaryDatabaseGuard guard = TemporaryDatabaseGuard.FromConnectionString(connectionString!);
         using (guard)
         {
-            Assert.That(PostgresHelper.CheckDatabaseExists(guard.Information, guard.Information.Database),
+            Assert.That(guard.Information.CheckDatabaseExists(guard.Information.Database),
                 Is.True);
         }
 
-        Assert.That(PostgresHelper.CheckDatabaseExists(guard.Information, guard.Information.Database),
+        Assert.That(guard.Information.CheckDatabaseExists(guard.Information.Database),
             Is.False);
     }
 }

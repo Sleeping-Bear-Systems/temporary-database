@@ -14,7 +14,7 @@ public sealed class DatabaseOptions
     {
         Collation = default,
         CharacterSet = default,
-        SslMode = default
+        SslMode = MySqlSslMode.Disabled
     };
 
     /// <summary>
@@ -28,7 +28,7 @@ public sealed class DatabaseOptions
     public string? CharacterSet { get; init; }
 
     /// <summary>
-    /// SSL Mode.
+    ///     SSL Mode.
     /// </summary>
     public MySqlSslMode SslMode { get; init; }
 }

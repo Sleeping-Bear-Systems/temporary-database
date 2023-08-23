@@ -3,7 +3,7 @@ using MySql.Data.MySqlClient;
 namespace SleepingBearSystems.TemporaryDatabase.MySql.Tests;
 
 /// <summary>
-/// Tests for <see cref="DatabaseOptions"/>.
+///     Tests for <see cref="DatabaseOptions" />.
 /// </summary>
 internal static class DatabaseOptionsTests
 {

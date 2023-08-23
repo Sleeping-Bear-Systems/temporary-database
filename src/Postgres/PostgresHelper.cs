@@ -19,40 +19,41 @@ internal static class PostgresHelper
         DatabaseOptions? options = default)
     {
         var validOptions = options ?? DatabaseOptions.Defaults;
-        var masterConnectionString = GetMasterConnectionString(connectionString);
+        var connectionStringBuilder = new NpgsqlConnectionStringBuilder(connectionString)
+        {
+            Database = database
+        };
+        var databaseConnectionString = connectionStringBuilder.ToString();
+
+        connectionStringBuilder.Database = "postgres";
+        var masterConnectionString = connectionStringBuilder.ToString();
         using var connection = new NpgsqlConnection(masterConnectionString);
         connection.Open();
 
         var builder = new StringBuilder()
             .Append(CultureInfo.InvariantCulture, $"CREATE DATABASE {database}");
         if (!string.IsNullOrWhiteSpace(validOptions.Encoding))
-        {
             builder.Append(CultureInfo.InvariantCulture, $" ENCODING '{validOptions.Encoding}'");
-        }
 
         if (!string.IsNullOrWhiteSpace(validOptions.Collation))
-        {
             builder.Append(CultureInfo.InvariantCulture, $" LC_COLLATE '{validOptions.Collation}'");
-        }
 
         if (!string.IsNullOrWhiteSpace(validOptions.CType))
-        {
             builder.Append(CultureInfo.InvariantCulture, $"LC_CTYPE '{validOptions.CType}'");
-        }
 
         builder.Append(';');
 
         using var command = new NpgsqlCommand(builder.ToString(), connection);
         command.ExecuteNonQuery();
-        return new DatabaseInformation(connectionString, database);
+        return new DatabaseInformation(databaseConnectionString, database);
     }
 
     /// <summary>
     ///     Drops a Postgres database.
     /// </summary>
-    public static void DropDatabase(DatabaseInformation information)
+    public static void DropDatabase(this DatabaseInformation information)
     {
-        using var connection = new NpgsqlConnection(GetMasterConnectionString(information.ConnectionString));
+        using var connection = new NpgsqlConnection(information.ToMasterConnectionString());
         connection.Open();
         var cmdText = string.Format(
             CultureInfo.InvariantCulture,
@@ -65,9 +66,10 @@ internal static class PostgresHelper
     /// <summary>
     ///     Checks if a database exists.
     /// </summary>
-    public static bool CheckDatabaseExists(DatabaseInformation information, string database, bool ignoreCase = true)
+    public static bool CheckDatabaseExists(this DatabaseInformation information, string database,
+        bool ignoreCase = true)
     {
-        var masterConnectionString = GetMasterConnectionString(information.ConnectionString);
+        var masterConnectionString = information.ToMasterConnectionString();
         using var connection = new NpgsqlConnection(masterConnectionString);
         connection.Open();
         // ReSharper disable once StringLiteralTypo
@@ -82,9 +84,9 @@ internal static class PostgresHelper
     /// <summary>
     ///     Gets the master database connection string.
     /// </summary>
-    public static string GetMasterConnectionString(string connectionString)
+    private static string ToMasterConnectionString(this DatabaseInformation information)
     {
-        return new NpgsqlConnectionStringBuilder(connectionString)
+        return new NpgsqlConnectionStringBuilder(information.ConnectionString)
         {
             Database = "postgres"
         }.ToString();

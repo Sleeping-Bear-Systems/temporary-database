@@ -13,17 +13,20 @@ namespace SleepingBear.TemporaryDatabase.Postgres;
 [SuppressMessage("Security", "CA2100:Review SQL queries for security vulnerabilities")]
 public sealed class TemporaryDatabaseGuard : IAsyncDisposable
 {
-    private readonly string _connectionString;
-
     private TemporaryDatabaseGuard(string connectionString)
     {
-        this._connectionString = connectionString;
+        this.ConnectionString = connectionString;
     }
+
+    /// <summary>
+    ///     Connection string.
+    /// </summary>
+    public string ConnectionString { get; }
 
     /// <inheritdoc cref="IAsyncDisposable" />
     public async ValueTask DisposeAsync()
     {
-        await DropDatabase(this._connectionString).ConfigureAwait(false);
+        await DropDatabaseAsync(this.ConnectionString);
     }
 
     /// <summary>
@@ -43,37 +46,37 @@ public sealed class TemporaryDatabaseGuard : IAsyncDisposable
     ///     Factory method for creating a <see cref="TemporaryDatabaseGuard" /> instance.
     /// </summary>
     public static async Task<TemporaryDatabaseGuard> FromConnectionStringAsync(
-        string connectionString,
+        string? rawConnectionString,
         DatabaseOptions? options = null)
     {
-        var databaseConnectionString = await CreateDatabaseAsync(
-            connectionString,
+        var connectionString = await CreateDatabaseAsync(
+            rawConnectionString,
             DatabaseHelper.GenerateDatabaseName(),
-            options).ConfigureAwait(false);
-        return new TemporaryDatabaseGuard(databaseConnectionString);
+            options);
+        return new TemporaryDatabaseGuard(connectionString);
     }
 
     /// <summary>
     ///     Creates a Postgres database.
     /// </summary>
     private static async Task<string> CreateDatabaseAsync(
-        string connectionString,
+        string? rawConnectionString,
         string database,
         DatabaseOptions? options = null)
     {
         // set connection string
-        var connectionStringBuilder = new NpgsqlConnectionStringBuilder(connectionString)
+        var validOptions = options ?? DatabaseOptions.Defaults;
+        rawConnectionString = ConvertFromUri(rawConnectionString);
+        var connectionStringBuilder = new NpgsqlConnectionStringBuilder(rawConnectionString ?? string.Empty)
         {
             Database = database
         };
         var databaseConnectionString = connectionStringBuilder.ToString();
         connectionStringBuilder.Database = "postgres";
-        var masterConnectionString = connectionStringBuilder.ToString();
 
         // create database
-        await using var connection = new NpgsqlConnection(masterConnectionString);
+        await using var connection = new NpgsqlConnection(connectionStringBuilder.ToString());
         await connection.OpenAsync();
-        var validOptions = options ?? DatabaseOptions.Defaults;
         var stringBuilder = new StringBuilder()
             .Append(CultureInfo.InvariantCulture, $"CREATE DATABASE {database}")
             .AppendIf(!string.IsNullOrWhiteSpace(validOptions.Encoding), $" ENCODING '{validOptions.Encoding}'")
@@ -88,18 +91,38 @@ public sealed class TemporaryDatabaseGuard : IAsyncDisposable
     /// <summary>
     ///     Drops a Postgres database.
     /// </summary>
-    private static async Task DropDatabase(string connectionString)
+    private static async Task DropDatabaseAsync(string connectionString)
     {
         // set up connection string
-        var builder = new NpgsqlConnectionStringBuilder(connectionString);
-        var database = builder.Database;
-        builder.Database = "postgres";
+        var connectionStringBuilder = new NpgsqlConnectionStringBuilder(connectionString);
+        var database = connectionStringBuilder.Database;
+        connectionStringBuilder.Database = "postgres";
 
         // drop database
-        await using var connection = new NpgsqlConnection(builder.ToString());
+        await using var connection = new NpgsqlConnection(connectionStringBuilder.ToString());
         await connection.OpenAsync();
         var cmdText = $"DROP DATABASE IF EXISTS {database} WITH (FORCE);";
         await using var command = new NpgsqlCommand(cmdText, connection);
         await command.ExecuteNonQueryAsync();
+    }
+
+    private static string? ConvertFromUri(string? rawConnectionString)
+    {
+        if (string.IsNullOrWhiteSpace(rawConnectionString) || !rawConnectionString.StartsWith("postgresql://", StringComparison.OrdinalIgnoreCase))
+        {
+            return rawConnectionString;
+        }
+
+        var uri = new Uri(rawConnectionString);
+        var connectionStringBuilder = new NpgsqlConnectionStringBuilder
+        {
+            Host = uri.Host,
+            Port = uri.Port,
+            Username = uri.UserInfo.Split(':')[0],
+            Password = uri.UserInfo.Split(':')[1],
+            Database = uri.LocalPath.TrimStart('/'),
+        };
+        return connectionStringBuilder.ToString();
+
     }
 }

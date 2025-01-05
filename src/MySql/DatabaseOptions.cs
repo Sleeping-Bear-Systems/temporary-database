@@ -1,6 +1,10 @@
 ﻿using MySql.Data.MySqlClient;
 
-namespace SleepingBearSystems.TemporaryDatabase.MySql;
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable MemberCanBePrivate.Global
+
+namespace SleepingBear.TemporaryDatabase.MySql;
 
 /// <summary>
 ///     Temporary database guard configuration options.
@@ -10,12 +14,7 @@ public sealed class DatabaseOptions
     /// <summary>
     ///     Default options.
     /// </summary>
-    public static readonly DatabaseOptions Defaults = new()
-    {
-        Collation = default,
-        CharacterSet = default,
-        SslMode = MySqlSslMode.Disabled
-    };
+    public static readonly DatabaseOptions Defaults = new();
 
     /// <summary>
     ///     Database collation.
@@ -30,5 +29,5 @@ public sealed class DatabaseOptions
     /// <summary>
     ///     SSL Mode.
     /// </summary>
-    public MySqlSslMode SslMode { get; init; }
+    public MySqlSslMode SslMode { get; init; } = MySqlSslMode.Preferred;
 }

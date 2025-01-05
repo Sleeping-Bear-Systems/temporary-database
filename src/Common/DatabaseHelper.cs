@@ -1,6 +1,4 @@
-﻿using System.Text;
-
-namespace SleepingBearSystems.TemporaryDatabase.Common;
+﻿namespace SleepingBear.TemporaryDatabase.Common;
 
 /// <summary>
 ///     Helper methods for databases.
@@ -8,19 +6,10 @@ namespace SleepingBearSystems.TemporaryDatabase.Common;
 public static class DatabaseHelper
 {
     /// <summary>
-    ///     Default database name prefix
-    /// </summary>
-    public const string DefaultPrefix = "sbs_";
-
-    /// <summary>
     ///     Generates a random database name.
     /// </summary>
-    public static string GenerateDatabaseName(string? prefix = default)
+    public static string GenerateDatabaseName()
     {
-        return new StringBuilder()
-            .Append(string.IsNullOrWhiteSpace(prefix) ? DefaultPrefix : prefix)
-            .Append(Guid.NewGuid().ToString("N"))
-            .ToString()
-            .ToLowerInvariant();
+        return $"sbs_tmp_{Guid.NewGuid():N}";
     }
 }

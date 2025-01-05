@@ -1,6 +1,6 @@
-using MySql.Data.MySqlClient;
+﻿using Npgsql;
 
-namespace SleepingBearSystems.TemporaryDatabase.MySql.Tests;
+namespace SleepingBear.TemporaryDatabase.Postgres.Tests;
 
 /// <summary>
 ///     Tests for <see cref="DatabaseOptions" />.
@@ -12,9 +12,10 @@ internal static class DatabaseOptionsTests
     {
         Assert.Multiple(() =>
         {
-            Assert.That(DatabaseOptions.Defaults.CharacterSet, Is.Null);
             Assert.That(DatabaseOptions.Defaults.Collation, Is.Null);
-            Assert.That(DatabaseOptions.Defaults.SslMode, Is.EqualTo(MySqlSslMode.Disabled));
+            Assert.That(DatabaseOptions.Defaults.CType, Is.Null);
+            Assert.That(DatabaseOptions.Defaults.Encoding, Is.Null);
+            Assert.That(DatabaseOptions.Defaults.SslMode, Is.EqualTo(SslMode.Prefer));
         });
     }
 }

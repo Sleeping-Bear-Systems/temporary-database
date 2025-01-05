@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Text;
 using Npgsql;
-using SleepingBear.TemporaryDatabase.Common;
+using SleepingBear.Functional.Common;
 
 namespace SleepingBear.TemporaryDatabase.Postgres;
 
@@ -36,9 +36,9 @@ public sealed class TemporaryDatabaseGuard : IAsyncDisposable
         string? variable = null,
         DatabaseOptions? options = null)
     {
-        var validVariable = variable ?? "SBS_TEST_SERVER_POSTGRES";
+        var validVariable = variable.IfNull("SBS_TEST_SERVER_POSTGRES");
         return await FromConnectionStringAsync(
-            Environment.GetEnvironmentVariable(validVariable) ?? string.Empty,
+            Environment.GetEnvironmentVariable(validVariable).IfNull(),
             options);
     }
 
@@ -51,7 +51,7 @@ public sealed class TemporaryDatabaseGuard : IAsyncDisposable
     {
         var connectionString = await CreateDatabaseAsync(
             rawConnectionString,
-            DatabaseHelper.GenerateDatabaseName(),
+            $"sbs_tmp_{Guid.NewGuid():N}",
             options);
         return new TemporaryDatabaseGuard(connectionString);
     }
@@ -67,7 +67,7 @@ public sealed class TemporaryDatabaseGuard : IAsyncDisposable
         // set connection string
         var validOptions = options ?? DatabaseOptions.Defaults;
         rawConnectionString = ConvertFromUri(rawConnectionString);
-        var connectionStringBuilder = new NpgsqlConnectionStringBuilder(rawConnectionString ?? string.Empty)
+        var connectionStringBuilder = new NpgsqlConnectionStringBuilder(rawConnectionString.IfNull())
         {
             Database = database,
             SslMode = validOptions.SslMode

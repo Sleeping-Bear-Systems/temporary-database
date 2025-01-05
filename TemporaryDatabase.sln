@@ -8,17 +8,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{CA45EC33-AEF
 		src\Directory.Build.props = src\Directory.Build.props
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Postgres", "src\Postgres\Postgres.csproj", "{3F8F9610-486A-43DE-849B-FCD15FD8AC01}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SleepingBear.TemporaryDatabase.Postgres", "src\SleepingBear.TemporaryDatabase.Postgres\SleepingBear.TemporaryDatabase.Postgres.csproj", "{3F8F9610-486A-43DE-849B-FCD15FD8AC01}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql", "src\MySql\MySql.csproj", "{992AF964-0979-4CFA-89BC-9B6AE8380A10}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SleepingBear.TemporaryDatabase.MySql", "src\SleepingBear.TemporaryDatabase.MySql\SleepingBear.TemporaryDatabase.MySql.csproj", "{992AF964-0979-4CFA-89BC-9B6AE8380A10}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "src\Common\Common.csproj", "{6AD57D4B-9F80-4BD4-B2BC-C1D48F68A2D4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SleepingBear.TemporaryDatabase.Common", "src\SleepingBear.TemporaryDatabase.Common\SleepingBear.TemporaryDatabase.Common.csproj", "{6AD57D4B-9F80-4BD4-B2BC-C1D48F68A2D4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Tests", "src\Common.Tests\Common.Tests.csproj", "{0F66A444-9359-40EE-99CD-370B39E70B02}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SleepingBear.TemporaryDatabase.Common.Tests", "src\SleepingBear.TemporaryDatabase.Common.Tests\SleepingBear.TemporaryDatabase.Common.Tests.csproj", "{0F66A444-9359-40EE-99CD-370B39E70B02}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql.Tests", "src\MySql.Tests\MySql.Tests.csproj", "{46B32208-63C3-42BE-BB3A-51FDF18B4F75}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SleepingBear.TemporaryDatabase.MySql.Tests", "src\SleepingBear.TemporaryDatabase.MySql.Tests\SleepingBear.TemporaryDatabase.MySql.Tests.csproj", "{46B32208-63C3-42BE-BB3A-51FDF18B4F75}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Postgres.Tests", "src\Postgres.Tests\Postgres.Tests.csproj", "{1D2EBA83-DC86-4F1B-AFA1-2D012FBB8F71}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SleepingBear.TemporaryDatabase.Postgres.Tests", "src\SleepingBear.TemporaryDatabase.Postgres.Tests\SleepingBear.TemporaryDatabase.Postgres.Tests.csproj", "{1D2EBA83-DC86-4F1B-AFA1-2D012FBB8F71}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

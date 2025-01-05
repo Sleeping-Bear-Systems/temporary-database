@@ -1,32 +1,32 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <AssemblyName>SleepingBearSystems.TemporaryDatabase.Common</AssemblyName>
-    <IsPackable>true</IsPackable>
-    <RootNamespace>SleepingBearSystems.TemporaryDatabase.Common</RootNamespace>
-    <TargetFramework>net7.0</TargetFramework>
-  </PropertyGroup>
+    <PropertyGroup>
+        <AssemblyName>SleepingBearSystems.TemporaryDatabase.Common</AssemblyName>
+        <IsPackable>true</IsPackable>
+        <RootNamespace>SleepingBearSystems.TemporaryDatabase.Common</RootNamespace>
+        <TargetFramework>net7.0</TargetFramework>
+    </PropertyGroup>
 
-  <PropertyGroup>
-    <Description>A class library for creating temporary databases.</Description>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageIcon>icon.png</PackageIcon>
-    <PackageId>SleepingBearSystems.TemporaryDatabase.Common</PackageId>
-  </PropertyGroup>
+    <PropertyGroup>
+        <Description>A class library for creating temporary databases.</Description>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageIcon>icon.png</PackageIcon>
+        <PackageId>SleepingBearSystems.TemporaryDatabase.Common</PackageId>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
 
-  <ItemGroup>
-    <None Include="..\icon.png" Pack="true" PackagePath="\" />
-  </ItemGroup>
+    <ItemGroup>
+        <None Include="..\icon.png" Pack="true" PackagePath="\"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <InternalsVisibleTo Include="$(AssemblyName).Test" />
-  </ItemGroup>
+    <ItemGroup>
+        <InternalsVisibleTo Include="$(AssemblyName).Test"/>
+    </ItemGroup>
 
 </Project>

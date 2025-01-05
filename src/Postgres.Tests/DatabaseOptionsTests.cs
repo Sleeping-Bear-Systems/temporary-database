@@ -1,4 +1,6 @@
-﻿namespace SleepingBear.TemporaryDatabase.Postgres.Tests;
+﻿using Npgsql;
+
+namespace SleepingBear.TemporaryDatabase.Postgres.Tests;
 
 /// <summary>
 ///     Tests for <see cref="DatabaseOptions" />.
@@ -13,6 +15,7 @@ internal static class DatabaseOptionsTests
             Assert.That(DatabaseOptions.Defaults.Collation, Is.Null);
             Assert.That(DatabaseOptions.Defaults.CType, Is.Null);
             Assert.That(DatabaseOptions.Defaults.Encoding, Is.Null);
+            Assert.That(DatabaseOptions.Defaults.SslMode, Is.EqualTo(SslMode.Prefer));
         });
     }
 }

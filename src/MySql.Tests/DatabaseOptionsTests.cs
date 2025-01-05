@@ -14,7 +14,7 @@ internal static class DatabaseOptionsTests
         {
             Assert.That(DatabaseOptions.Defaults.CharacterSet, Is.Null);
             Assert.That(DatabaseOptions.Defaults.Collation, Is.Null);
-            Assert.That(DatabaseOptions.Defaults.SslMode, Is.EqualTo(MySqlSslMode.Disabled));
+            Assert.That(DatabaseOptions.Defaults.SslMode, Is.EqualTo(MySqlSslMode.Preferred));
         });
     }
 }

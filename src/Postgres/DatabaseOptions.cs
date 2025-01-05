@@ -1,4 +1,8 @@
-﻿// ReSharper disable MemberCanBePrivate.Global
+﻿using Npgsql;
+
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedAutoPropertyAccessor.Global
 
 namespace SleepingBear.TemporaryDatabase.Postgres;
 
@@ -10,12 +14,7 @@ public sealed class DatabaseOptions
     /// <summary>
     ///     Default options.
     /// </summary>
-    public static readonly DatabaseOptions Defaults = new()
-    {
-        Collation = null,
-        CType = null,
-        Encoding = null
-    };
+    public static readonly DatabaseOptions Defaults = new();
 
     /// <summary>
     ///     Database character set encoding.
@@ -31,4 +30,9 @@ public sealed class DatabaseOptions
     ///     Database character classification.
     /// </summary>
     public string? CType { get; init; }
+
+    /// <summary>
+    ///     SSL Mode.
+    /// </summary>
+    public SslMode SslMode { get; init; } = SslMode.Prefer;
 }

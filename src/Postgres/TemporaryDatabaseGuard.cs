@@ -69,7 +69,8 @@ public sealed class TemporaryDatabaseGuard : IAsyncDisposable
         rawConnectionString = ConvertFromUri(rawConnectionString);
         var connectionStringBuilder = new NpgsqlConnectionStringBuilder(rawConnectionString ?? string.Empty)
         {
-            Database = database
+            Database = database,
+            SslMode = validOptions.SslMode
         };
         var databaseConnectionString = connectionStringBuilder.ToString();
         connectionStringBuilder.Database = "postgres";
@@ -108,7 +109,8 @@ public sealed class TemporaryDatabaseGuard : IAsyncDisposable
 
     private static string? ConvertFromUri(string? rawConnectionString)
     {
-        if (string.IsNullOrWhiteSpace(rawConnectionString) || !rawConnectionString.StartsWith("postgresql://", StringComparison.OrdinalIgnoreCase))
+        if (string.IsNullOrWhiteSpace(rawConnectionString) ||
+            !rawConnectionString.StartsWith("postgresql://", StringComparison.OrdinalIgnoreCase))
         {
             return rawConnectionString;
         }
@@ -123,6 +125,5 @@ public sealed class TemporaryDatabaseGuard : IAsyncDisposable
             Database = uri.LocalPath.TrimStart('/')
         };
         return connectionStringBuilder.ToString();
-
     }
 }

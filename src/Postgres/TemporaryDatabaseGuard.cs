@@ -120,7 +120,7 @@ public sealed class TemporaryDatabaseGuard : IAsyncDisposable
             Port = uri.Port,
             Username = uri.UserInfo.Split(':')[0],
             Password = uri.UserInfo.Split(':')[1],
-            Database = uri.LocalPath.TrimStart('/'),
+            Database = uri.LocalPath.TrimStart('/')
         };
         return connectionStringBuilder.ToString();
 

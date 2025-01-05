@@ -12,8 +12,8 @@ public sealed class DatabaseOptions
     /// </summary>
     public static readonly DatabaseOptions Defaults = new()
     {
-        Collation = default,
-        CharacterSet = default,
+        Collation = null,
+        CharacterSet = null,
         SslMode = MySqlSslMode.Disabled
     };
 

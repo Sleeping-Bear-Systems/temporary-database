@@ -15,12 +15,12 @@ public static class DatabaseHelper
     /// <summary>
     ///     Generates a random database name.
     /// </summary>
-    public static string GenerateDatabaseName(string? prefix = default)
+    public static string GenerateDatabaseName(string? prefix = null)
     {
         return new StringBuilder()
             .Append(string.IsNullOrWhiteSpace(prefix) ? DefaultPrefix : prefix)
             .Append(Guid.NewGuid().ToString("N"))
             .ToString()
-            .ToLowerInvariant();
+            .ToUpperInvariant();
     }
 }

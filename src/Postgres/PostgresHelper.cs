@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Text;
 using Npgsql;
 using SleepingBearSystems.TemporaryDatabase.Common;
@@ -13,10 +14,11 @@ internal static class PostgresHelper
     /// <summary>
     ///     Creates a Postgres database.
     /// </summary>
+    [SuppressMessage("Security", "CA2100:Review SQL queries for security vulnerabilities")]
     public static DatabaseInformation CreateDatabase(
         string connectionString,
         string database,
-        DatabaseOptions? options = default)
+        DatabaseOptions? options = null)
     {
         var validOptions = options ?? DatabaseOptions.Defaults;
         var connectionStringBuilder = new NpgsqlConnectionStringBuilder(connectionString)
@@ -57,6 +59,7 @@ internal static class PostgresHelper
     /// <summary>
     ///     Drops a Postgres database.
     /// </summary>
+    [SuppressMessage("Security", "CA2100:Review SQL queries for security vulnerabilities")]
     public static void DropDatabase(this DatabaseInformation information)
     {
         using var connection = new NpgsqlConnection(information.ToMasterConnectionString());

@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using MySql.Data.MySqlClient;
 using SleepingBearSystems.TemporaryDatabase.Common;
 
@@ -100,6 +101,8 @@ internal static class TemporaryDatabaseGuardTests
             Is.False);
     }
 
+    [SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope")]
+    [SuppressMessage("Security", "CA2100:Review SQL queries for security vulnerabilities")]
     private static (string, string) QueryCharacterSetCollation(DatabaseInformation information, string database)
     {
         var masterConnectionString = new MySqlConnectionStringBuilder(information.ConnectionString)

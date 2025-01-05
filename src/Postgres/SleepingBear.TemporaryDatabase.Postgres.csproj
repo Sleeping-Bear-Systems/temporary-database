@@ -1,10 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <AssemblyName>SleepingBearSystems.TemporaryDatabase.Postgres</AssemblyName>
         <IsPackable>true</IsPackable>
-        <RootNamespace>SleepingBearSystems.TemporaryDatabase.Postgres</RootNamespace>
-        <TargetFramework>net7.0</TargetFramework>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -33,7 +30,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Common\Common.csproj"/>
+        <ProjectReference Include="..\Common\SleepingBear.TemporaryDatabase.Common.csproj" />
     </ItemGroup>
 
 </Project>

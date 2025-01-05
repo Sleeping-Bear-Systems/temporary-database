@@ -10,9 +10,9 @@ public sealed class DatabaseOptions
     /// </summary>
     public static readonly DatabaseOptions Defaults = new()
     {
-        Collation = default,
-        CType = default,
-        Encoding = default
+        Collation = null,
+        CType = null,
+        Encoding = null
     };
 
     /// <summary>

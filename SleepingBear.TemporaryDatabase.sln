@@ -12,10 +12,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SleepingBear.TemporaryDatab
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SleepingBear.TemporaryDatabase.MySql", "src\MySql\SleepingBear.TemporaryDatabase.MySql.csproj", "{992AF964-0979-4CFA-89BC-9B6AE8380A10}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SleepingBear.TemporaryDatabase.Common", "src\Common\SleepingBear.TemporaryDatabase.Common.csproj", "{6AD57D4B-9F80-4BD4-B2BC-C1D48F68A2D4}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SleepingBear.TemporaryDatabase.Common.Tests", "src\Common.Tests\SleepingBear.TemporaryDatabase.Common.Tests.csproj", "{0F66A444-9359-40EE-99CD-370B39E70B02}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SleepingBear.TemporaryDatabase.MySql.Tests", "src\MySql.Tests\SleepingBear.TemporaryDatabase.MySql.Tests.csproj", "{46B32208-63C3-42BE-BB3A-51FDF18B4F75}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SleepingBear.TemporaryDatabase.Postgres.Tests", "src\Postgres.Tests\SleepingBear.TemporaryDatabase.Postgres.Tests.csproj", "{1D2EBA83-DC86-4F1B-AFA1-2D012FBB8F71}"
@@ -37,14 +33,6 @@ Global
 		{992AF964-0979-4CFA-89BC-9B6AE8380A10}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{992AF964-0979-4CFA-89BC-9B6AE8380A10}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{992AF964-0979-4CFA-89BC-9B6AE8380A10}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6AD57D4B-9F80-4BD4-B2BC-C1D48F68A2D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6AD57D4B-9F80-4BD4-B2BC-C1D48F68A2D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6AD57D4B-9F80-4BD4-B2BC-C1D48F68A2D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6AD57D4B-9F80-4BD4-B2BC-C1D48F68A2D4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0F66A444-9359-40EE-99CD-370B39E70B02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0F66A444-9359-40EE-99CD-370B39E70B02}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0F66A444-9359-40EE-99CD-370B39E70B02}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0F66A444-9359-40EE-99CD-370B39E70B02}.Release|Any CPU.Build.0 = Release|Any CPU
 		{46B32208-63C3-42BE-BB3A-51FDF18B4F75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{46B32208-63C3-42BE-BB3A-51FDF18B4F75}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{46B32208-63C3-42BE-BB3A-51FDF18B4F75}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -57,8 +45,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{3F8F9610-486A-43DE-849B-FCD15FD8AC01} = {CA45EC33-AEF1-4D6D-8C8F-CFDEC0E972C9}
 		{992AF964-0979-4CFA-89BC-9B6AE8380A10} = {CA45EC33-AEF1-4D6D-8C8F-CFDEC0E972C9}
-		{6AD57D4B-9F80-4BD4-B2BC-C1D48F68A2D4} = {CA45EC33-AEF1-4D6D-8C8F-CFDEC0E972C9}
-		{0F66A444-9359-40EE-99CD-370B39E70B02} = {CA45EC33-AEF1-4D6D-8C8F-CFDEC0E972C9}
 		{46B32208-63C3-42BE-BB3A-51FDF18B4F75} = {CA45EC33-AEF1-4D6D-8C8F-CFDEC0E972C9}
 		{1D2EBA83-DC86-4F1B-AFA1-2D012FBB8F71} = {CA45EC33-AEF1-4D6D-8C8F-CFDEC0E972C9}
 	EndGlobalSection

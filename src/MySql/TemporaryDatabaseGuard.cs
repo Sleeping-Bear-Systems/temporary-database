@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Text;
 using MySql.Data.MySqlClient;
-using SleepingBear.TemporaryDatabase.Common;
+using SleepingBear.Functional.Common;
 
 namespace SleepingBear.TemporaryDatabase.MySql;
 
@@ -36,9 +36,9 @@ public sealed class TemporaryDatabaseGuard : IAsyncDisposable
         string? variable = null,
         DatabaseOptions? options = null)
     {
-        var validVariable = variable ?? "SBS_TEST_SERVER_MYSQL";
+        var validVariable = variable.IfNull("SBS_TEST_SERVER_MYSQL");
         return await FromConnectionStringAsync(
-            Environment.GetEnvironmentVariable(validVariable) ?? string.Empty,
+            Environment.GetEnvironmentVariable(validVariable).IfNull(),
             options);
     }
 
@@ -51,7 +51,7 @@ public sealed class TemporaryDatabaseGuard : IAsyncDisposable
     {
         var connectionString = await CreateDatabaseAsync(
             rawConnectionString,
-            DatabaseHelper.GenerateDatabaseName(),
+            $"sbs_tmp_{Guid.NewGuid():N}",
             options);
         return new TemporaryDatabaseGuard(connectionString);
     }
@@ -66,7 +66,7 @@ public sealed class TemporaryDatabaseGuard : IAsyncDisposable
     {
         // set connection string
         var validOptions = options ?? DatabaseOptions.Defaults;
-        var connectionStringBuilder = new MySqlConnectionStringBuilder(rawConnectionString ?? string.Empty)
+        var connectionStringBuilder = new MySqlConnectionStringBuilder(rawConnectionString.IfNull())
         {
             SslMode = validOptions.SslMode,
             Database = database

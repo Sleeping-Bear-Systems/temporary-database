@@ -1,13 +1,13 @@
 using System.Text.RegularExpressions;
 
-namespace SleepingBearSystems.TemporaryDatabase.Common.Tests;
+namespace SleepingBear.TemporaryDatabase.Common.Tests;
 
 /// <summary>
 ///     Tests for <see cref="DatabaseHelper" />.
 /// </summary>
-internal static class DatabaseHelperTests
+internal static partial class DatabaseHelperTests
 {
-    private static readonly Regex GuidRegex = new("[a-f0-9]{32}");
+    private static readonly Regex GuidRegex = MyRegex();
 
     [Test]
     public static void GenerateDatabaseName_ValidatesBehavior()
@@ -55,4 +55,7 @@ internal static class DatabaseHelperTests
             });
         }
     }
+
+    [GeneratedRegex("[a-f0-9]{32}")]
+    private static partial Regex MyRegex();
 }

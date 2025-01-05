@@ -2,9 +2,9 @@
 using System.Globalization;
 using System.Text;
 using Npgsql;
-using SleepingBearSystems.TemporaryDatabase.Common;
+using SleepingBear.TemporaryDatabase.Common;
 
-namespace SleepingBearSystems.TemporaryDatabase.Postgres;
+namespace SleepingBear.TemporaryDatabase.Postgres;
 
 /// <summary>
 ///     Helper methods for Postgres databases.
@@ -62,11 +62,11 @@ internal static class PostgresHelper
     [SuppressMessage("Security", "CA2100:Review SQL queries for security vulnerabilities")]
     public static void DropDatabase(this DatabaseInformation information)
     {
-        using var connection = new NpgsqlConnection(information.ToMasterConnectionString());
+        using var connection = new NpgsqlConnection(ToMasterConnectionString(information));
         connection.Open();
         var cmdText = string.Format(
             CultureInfo.InvariantCulture,
-            "DROP DATABASE IF EXISTS {0} WITH (FORCE);",
+            (string)"DROP DATABASE IF EXISTS {0} WITH (FORCE);",
             information.Database);
         using var command = new NpgsqlCommand(cmdText, connection);
         command.ExecuteNonQuery();
@@ -78,7 +78,7 @@ internal static class PostgresHelper
     public static bool CheckDatabaseExists(this DatabaseInformation information, string database,
         bool ignoreCase = true)
     {
-        var masterConnectionString = information.ToMasterConnectionString();
+        var masterConnectionString = ToMasterConnectionString(information);
         using var connection = new NpgsqlConnection(masterConnectionString);
         connection.Open();
         // ReSharper disable once StringLiteralTypo

@@ -1,4 +1,4 @@
-namespace SleepingBearSystems.TemporaryDatabase.Common;
+namespace SleepingBear.TemporaryDatabase.Common;
 
 /// <summary>
 ///     Container class hold database creation information.

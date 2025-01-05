@@ -23,7 +23,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\MySql\SleepingBear.TemporaryDatabase.MySql.csproj" />
+        <ProjectReference Include="..\MySql\SleepingBear.TemporaryDatabase.MySql.csproj"/>
     </ItemGroup>
 
 </Project>

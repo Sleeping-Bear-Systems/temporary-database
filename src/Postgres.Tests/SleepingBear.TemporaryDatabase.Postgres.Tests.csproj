@@ -23,8 +23,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Common\SleepingBear.TemporaryDatabase.Common.csproj" />
-        <ProjectReference Include="..\Postgres\SleepingBear.TemporaryDatabase.Postgres.csproj" />
+        <ProjectReference Include="..\Common\SleepingBear.TemporaryDatabase.Common.csproj"/>
+        <ProjectReference Include="..\Postgres\SleepingBear.TemporaryDatabase.Postgres.csproj"/>
     </ItemGroup>
 
 </Project>

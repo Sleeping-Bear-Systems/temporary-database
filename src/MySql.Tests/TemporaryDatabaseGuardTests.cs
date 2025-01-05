@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using MySql.Data.MySqlClient;
-using SleepingBearSystems.TemporaryDatabase.Common;
+using SleepingBear.TemporaryDatabase.Common;
 
-namespace SleepingBearSystems.TemporaryDatabase.MySql.Tests;
+namespace SleepingBear.TemporaryDatabase.MySql.Tests;
 
 /// <summary>
 ///     Tests for <see cref="TemporaryDatabaseGuard" />.
@@ -17,17 +17,19 @@ internal static class TemporaryDatabaseGuardTests
     {
         // use case: default options
         {
-            ITemporaryDatabaseGuard guard =
-                TemporaryDatabaseGuard.FromEnvironmentVariable(TestServerEnvironmentVariable);
-            using (guard)
+            using (TemporaryDatabaseGuard.FromEnvironmentVariable(TestServerEnvironmentVariable))
             {
                 Assert.That(
-                    guard.Information.CheckDatabaseExists(guard.Information.Database),
+                    TemporaryDatabaseGuard.FromEnvironmentVariable(TestServerEnvironmentVariable).Information
+                        .CheckDatabaseExists(TemporaryDatabaseGuard
+                            .FromEnvironmentVariable(TestServerEnvironmentVariable).Information.Database),
                     Is.True);
             }
 
             Assert.That(
-                guard.Information.CheckDatabaseExists(guard.Information.Database),
+                TemporaryDatabaseGuard.FromEnvironmentVariable(TestServerEnvironmentVariable).Information
+                    .CheckDatabaseExists(TemporaryDatabaseGuard.FromEnvironmentVariable(TestServerEnvironmentVariable)
+                        .Information.Database),
                 Is.False);
         }
 
@@ -39,15 +41,20 @@ internal static class TemporaryDatabaseGuardTests
                 Collation = "latin1_swedish_ci",
                 SslMode = MySqlSslMode.Disabled
             };
-            ITemporaryDatabaseGuard guard =
-                TemporaryDatabaseGuard.FromEnvironmentVariable(TestServerEnvironmentVariable, options: options);
-            using (guard)
+            using (TemporaryDatabaseGuard.FromEnvironmentVariable(TestServerEnvironmentVariable, options: options))
             {
                 Assert.That(
-                    guard.Information.CheckDatabaseExists(guard.Information.Database),
+                    TemporaryDatabaseGuard.FromEnvironmentVariable(TestServerEnvironmentVariable, options: options)
+                        .Information.CheckDatabaseExists(TemporaryDatabaseGuard
+                            .FromEnvironmentVariable(TestServerEnvironmentVariable, options: options).Information
+                            .Database),
                     Is.True);
                 var (characterSet, collation) =
-                    QueryCharacterSetCollation(guard.Information, guard.Information.Database);
+                    QueryCharacterSetCollation(
+                        TemporaryDatabaseGuard.FromEnvironmentVariable(TestServerEnvironmentVariable, options: options)
+                            .Information,
+                        TemporaryDatabaseGuard.FromEnvironmentVariable(TestServerEnvironmentVariable, options: options)
+                            .Information.Database);
                 Assert.Multiple(() =>
                 {
                     Assert.That(characterSet, Is.EqualTo("latin1"));
@@ -56,7 +63,9 @@ internal static class TemporaryDatabaseGuardTests
             }
 
             Assert.That(
-                guard.Information.CheckDatabaseExists(guard.Information.Database),
+                TemporaryDatabaseGuard.FromEnvironmentVariable(TestServerEnvironmentVariable, options: options)
+                    .Information.CheckDatabaseExists(TemporaryDatabaseGuard
+                        .FromEnvironmentVariable(TestServerEnvironmentVariable, options: options).Information.Database),
                 Is.False);
         }
     }
@@ -69,18 +78,33 @@ internal static class TemporaryDatabaseGuardTests
 
         // use case: default options
         {
-            ITemporaryDatabaseGuard guard = TemporaryDatabaseGuard.FromParameters(
-                builder.Server!,
-                (ushort)builder.Port,
-                builder.UserID!,
-                builder.Password!);
-            using (guard)
+            using (TemporaryDatabaseGuard.FromParameters(
+                       builder.Server!,
+                       (ushort)builder.Port,
+                       builder.UserID!,
+                       builder.Password!))
             {
-                Assert.That(guard.Information.CheckDatabaseExists(guard.Information.Database),
+                Assert.That(TemporaryDatabaseGuard.FromParameters(
+                        builder.Server!,
+                        (ushort)builder.Port,
+                        builder.UserID!,
+                        builder.Password!).Information.CheckDatabaseExists(TemporaryDatabaseGuard.FromParameters(
+                        builder.Server!,
+                        (ushort)builder.Port,
+                        builder.UserID!,
+                        builder.Password!).Information.Database),
                     Is.True);
             }
 
-            Assert.That(guard.Information.CheckDatabaseExists(guard.Information.Database),
+            Assert.That(TemporaryDatabaseGuard.FromParameters(
+                    builder.Server!,
+                    (ushort)builder.Port,
+                    builder.UserID!,
+                    builder.Password!).Information.CheckDatabaseExists(TemporaryDatabaseGuard.FromParameters(
+                    builder.Server!,
+                    (ushort)builder.Port,
+                    builder.UserID!,
+                    builder.Password!).Information.Database),
                 Is.False);
         }
     }
@@ -90,14 +114,19 @@ internal static class TemporaryDatabaseGuardTests
     {
         var connectionString = Environment.GetEnvironmentVariable(TestServerEnvironmentVariable);
 
-        ITemporaryDatabaseGuard guard = TemporaryDatabaseGuard.FromConnectionString(connectionString!);
-        using (guard)
+        using (TemporaryDatabaseGuard.FromConnectionString(connectionString!))
         {
-            Assert.That(guard.Information.CheckDatabaseExists(guard.Information.Database),
+            Assert.That(
+                TemporaryDatabaseGuard.FromConnectionString(connectionString!).Information
+                    .CheckDatabaseExists(TemporaryDatabaseGuard.FromConnectionString(connectionString!).Information
+                        .Database),
                 Is.True);
         }
 
-        Assert.That(guard.Information.CheckDatabaseExists(guard.Information.Database),
+        Assert.That(
+            TemporaryDatabaseGuard.FromConnectionString(connectionString!).Information
+                .CheckDatabaseExists(
+                    TemporaryDatabaseGuard.FromConnectionString(connectionString!).Information.Database),
             Is.False);
     }
 

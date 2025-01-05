@@ -1,6 +1,6 @@
 ﻿using MySql.Data.MySqlClient;
 
-namespace SleepingBearSystems.TemporaryDatabase.MySql;
+namespace SleepingBear.TemporaryDatabase.MySql;
 
 /// <summary>
 ///     Temporary database guard configuration options.

@@ -1,6 +1,6 @@
 using MySql.Data.MySqlClient;
 
-namespace SleepingBearSystems.TemporaryDatabase.MySql.Tests;
+namespace SleepingBear.TemporaryDatabase.MySql.Tests;
 
 /// <summary>
 ///     Tests for <see cref="DatabaseOptions" />.

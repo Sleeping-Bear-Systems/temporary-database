@@ -1,7 +1,6 @@
 ﻿using Npgsql;
-using SleepingBearSystems.TemporaryDatabase.Common;
 
-namespace SleepingBearSystems.TemporaryDatabase.Postgres.Tests;
+namespace SleepingBear.TemporaryDatabase.Postgres.Tests;
 
 /// <summary>
 ///     Tests for <see cref="TemporaryDatabaseGuard" />.
@@ -15,17 +14,19 @@ internal static class TemporaryDatabaseGuardTests
     {
         // use case: default options
         {
-            ITemporaryDatabaseGuard guard =
-                TemporaryDatabaseGuard.FromEnvironmentVariable(TestServerEnvironmentVariable);
-            using (guard)
+            using (TemporaryDatabaseGuard.FromEnvironmentVariable(TestServerEnvironmentVariable))
             {
                 Assert.That(
-                    guard.Information.CheckDatabaseExists(guard.Information.Database),
+                    TemporaryDatabaseGuard.FromEnvironmentVariable(TestServerEnvironmentVariable).Information
+                        .CheckDatabaseExists(TemporaryDatabaseGuard
+                            .FromEnvironmentVariable(TestServerEnvironmentVariable).Information.Database),
                     Is.True);
             }
 
             Assert.That(
-                guard.Information.CheckDatabaseExists(guard.Information.Database),
+                TemporaryDatabaseGuard.FromEnvironmentVariable(TestServerEnvironmentVariable).Information
+                    .CheckDatabaseExists(TemporaryDatabaseGuard.FromEnvironmentVariable(TestServerEnvironmentVariable)
+                        .Information.Database),
                 Is.False);
         }
 
@@ -37,17 +38,20 @@ internal static class TemporaryDatabaseGuardTests
                 Collation = "en_US.utf8",
                 Encoding = "utf8"
             };
-            ITemporaryDatabaseGuard guard =
-                TemporaryDatabaseGuard.FromEnvironmentVariable(TestServerEnvironmentVariable, options: options);
-            using (guard)
+            using (TemporaryDatabaseGuard.FromEnvironmentVariable(TestServerEnvironmentVariable, options: options))
             {
                 Assert.That(
-                    guard.Information.CheckDatabaseExists(guard.Information.Database),
+                    TemporaryDatabaseGuard.FromEnvironmentVariable(TestServerEnvironmentVariable, options: options)
+                        .Information.CheckDatabaseExists(TemporaryDatabaseGuard
+                            .FromEnvironmentVariable(TestServerEnvironmentVariable, options: options).Information
+                            .Database),
                     Is.True);
             }
 
             Assert.That(
-                guard.Information.CheckDatabaseExists(guard.Information.Database),
+                TemporaryDatabaseGuard.FromEnvironmentVariable(TestServerEnvironmentVariable, options: options)
+                    .Information.CheckDatabaseExists(TemporaryDatabaseGuard
+                        .FromEnvironmentVariable(TestServerEnvironmentVariable, options: options).Information.Database),
                 Is.False);
         }
     }
@@ -60,19 +64,33 @@ internal static class TemporaryDatabaseGuardTests
 
         // use case: default options
         {
-            ITemporaryDatabaseGuard guard =
-                TemporaryDatabaseGuard.FromParameters(
-                    builder.Host!,
-                    (ushort)builder.Port,
-                    builder.Username!,
-                    builder.Password!);
-            using (guard)
+            using (TemporaryDatabaseGuard.FromParameters(
+                       builder.Host!,
+                       (ushort)builder.Port,
+                       builder.Username!,
+                       builder.Password!))
             {
-                Assert.That(guard.Information.CheckDatabaseExists(guard.Information.Database),
+                Assert.That(TemporaryDatabaseGuard.FromParameters(
+                        builder.Host!,
+                        (ushort)builder.Port,
+                        builder.Username!,
+                        builder.Password!).Information.CheckDatabaseExists(TemporaryDatabaseGuard.FromParameters(
+                        builder.Host!,
+                        (ushort)builder.Port,
+                        builder.Username!,
+                        builder.Password!).Information.Database),
                     Is.True);
             }
 
-            Assert.That(guard.Information.CheckDatabaseExists(guard.Information.Database),
+            Assert.That(TemporaryDatabaseGuard.FromParameters(
+                    builder.Host!,
+                    (ushort)builder.Port,
+                    builder.Username!,
+                    builder.Password!).Information.CheckDatabaseExists(TemporaryDatabaseGuard.FromParameters(
+                    builder.Host!,
+                    (ushort)builder.Port,
+                    builder.Username!,
+                    builder.Password!).Information.Database),
                 Is.False);
         }
     }
@@ -82,14 +100,19 @@ internal static class TemporaryDatabaseGuardTests
     {
         var connectionString = Environment.GetEnvironmentVariable(TestServerEnvironmentVariable);
 
-        ITemporaryDatabaseGuard guard = TemporaryDatabaseGuard.FromConnectionString(connectionString!);
-        using (guard)
+        using (TemporaryDatabaseGuard.FromConnectionString(connectionString!))
         {
-            Assert.That(guard.Information.CheckDatabaseExists(guard.Information.Database),
+            Assert.That(
+                TemporaryDatabaseGuard.FromConnectionString(connectionString!).Information
+                    .CheckDatabaseExists(TemporaryDatabaseGuard.FromConnectionString(connectionString!).Information
+                        .Database),
                 Is.True);
         }
 
-        Assert.That(guard.Information.CheckDatabaseExists(guard.Information.Database),
+        Assert.That(
+            TemporaryDatabaseGuard.FromConnectionString(connectionString!).Information
+                .CheckDatabaseExists(
+                    TemporaryDatabaseGuard.FromConnectionString(connectionString!).Information.Database),
             Is.False);
     }
 }

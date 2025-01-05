@@ -1,12 +1,12 @@
 ﻿using MySql.Data.MySqlClient;
-using SleepingBearSystems.TemporaryDatabase.Common;
+using SleepingBear.TemporaryDatabase.Common;
 
-namespace SleepingBearSystems.TemporaryDatabase.MySql;
+namespace SleepingBear.TemporaryDatabase.MySql;
 
 /// <summary>
 ///     Temporary database guard for Postgres databases.
 /// </summary>
-public sealed class TemporaryDatabaseGuard : TemporaryDatabaseGuardBase, ITemporaryDatabaseGuard
+public sealed class TemporaryDatabaseGuard : TemporaryDatabaseGuardBase, IDisposable
 {
     private TemporaryDatabaseGuard(DatabaseInformation information)
         : base(information)

@@ -1,4 +1,4 @@
-﻿namespace SleepingBearSystems.TemporaryDatabase.Common;
+﻿namespace SleepingBear.TemporaryDatabase.Common;
 
 /// <summary>
 ///     Abstract base class for temporary database guard implementations.

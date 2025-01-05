@@ -1,4 +1,4 @@
-namespace SleepingBearSystems.TemporaryDatabase.Common.Tests;
+namespace SleepingBear.TemporaryDatabase.Common.Tests;
 
 /// <summary>
 ///     Tests for <see cref="DatabaseInformation" />.

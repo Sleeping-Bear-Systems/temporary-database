@@ -2,9 +2,9 @@
 using System.Globalization;
 using System.Text;
 using MySql.Data.MySqlClient;
-using SleepingBearSystems.TemporaryDatabase.Common;
+using SleepingBear.TemporaryDatabase.Common;
 
-namespace SleepingBearSystems.TemporaryDatabase.MySql;
+namespace SleepingBear.TemporaryDatabase.MySql;
 
 /// <summary>
 ///     Helper methods for MySQL databases.
@@ -59,11 +59,11 @@ internal static class MySqlHelper
     [SuppressMessage("Security", "CA2100:Review SQL queries for security vulnerabilities")]
     public static void DropDatabase(this DatabaseInformation information)
     {
-        using var connection = new MySqlConnection(information.ToMasterConnectionString());
+        using var connection = new MySqlConnection(ToMasterConnectionString(information));
         connection.Open();
         var cmdText = string.Format(
             CultureInfo.InvariantCulture,
-            "DROP DATABASE IF EXISTS {0};",
+            (string)"DROP DATABASE IF EXISTS {0};",
             information.Database);
         using var command = new MySqlCommand(cmdText, connection);
         command.ExecuteNonQuery();
@@ -75,7 +75,7 @@ internal static class MySqlHelper
     public static bool CheckDatabaseExists(this DatabaseInformation information, string database,
         bool ignoreCase = true)
     {
-        using var connection = new MySqlConnection(information.ToMasterConnectionString());
+        using var connection = new MySqlConnection(ToMasterConnectionString(information));
         connection.Open();
         using var command = new MySqlCommand("SHOW DATABASES;", connection);
         using var reader = command.ExecuteReader();

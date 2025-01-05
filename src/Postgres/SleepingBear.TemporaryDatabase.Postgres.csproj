@@ -8,7 +8,8 @@
         <Description>A class library for creating temporary Postgres databases.</Description>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageIcon>icon.png</PackageIcon>
-        <PackageId>SleepingBearSystems.TemporaryDatabase.Postgres</PackageId>
+        <PackageId>SleepingBear.TemporaryDatabase.Postgres</PackageId>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
     <ItemGroup>
@@ -21,7 +22,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Include="..\icon.png" Pack="true" PackagePath="\"/>
+        <None Include="../icon.png" Pack="true" PackagePath="\"/>
         <None Include="README.md" Pack="true" PackagePath="\"/>
     </ItemGroup>
 

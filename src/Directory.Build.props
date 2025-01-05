@@ -16,7 +16,7 @@
     <PropertyGroup>
         <Authors>Charles Farris</Authors>
         <Company>Sleeping Bear Systems</Company>
-        <Copyright>Copyright (c) 2024-$([System.DateTime]::Now.Year.ToString()) Sleeping Bear Systems - Charles Farris</Copyright>
+        <Copyright>Copyright (c) 2021-$([System.DateTime]::Now.Year.ToString()) Sleeping Bear Systems - Charles Farris</Copyright>
         <DebugType>embedded</DebugType>
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>

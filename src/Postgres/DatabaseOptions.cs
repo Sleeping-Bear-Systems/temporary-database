@@ -1,4 +1,6 @@
-﻿namespace SleepingBear.TemporaryDatabase.Postgres;
+﻿// ReSharper disable MemberCanBePrivate.Global
+
+namespace SleepingBear.TemporaryDatabase.Postgres;
 
 /// <summary>
 ///     Temporary database guard configuration options.

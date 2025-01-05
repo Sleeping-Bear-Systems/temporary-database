@@ -1,5 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 
+// ReSharper disable MemberCanBePrivate.Global
+
 namespace SleepingBear.TemporaryDatabase.MySql;
 
 /// <summary>

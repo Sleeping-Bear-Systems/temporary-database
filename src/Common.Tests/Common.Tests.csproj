@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <AssemblyName>SleepingBearSystems.TemporaryDatabase.MySql.Tests</AssemblyName>
-    <RootNamespace>SleepingBearSystems.TemporaryDatabase.MySql.Tests</RootNamespace>
+    <AssemblyName>SleepingBearSystems.TemporaryDatabase.Common.Tests</AssemblyName>
+    <RootNamespace>SleepingBearSystems.TemporaryDatabase.Common.Tests</RootNamespace>
     <TargetFramework>net7.0</TargetFramework>
   </PropertyGroup>
 
@@ -29,7 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\MySql\MySql.csproj"/>
+    <ProjectReference Include="..\Common\Common.csproj" />
   </ItemGroup>
 
 </Project>

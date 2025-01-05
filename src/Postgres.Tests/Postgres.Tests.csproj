@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <AssemblyName>SleepingBearSystems.TemporaryDatabase.Common.Tests</AssemblyName>
-    <RootNamespace>SleepingBearSystems.TemporaryDatabase.Common.Tests</RootNamespace>
+    <AssemblyName>SleepingBearSystems.TemporaryDatabase.Postgres.Tests</AssemblyName>
+    <RootNamespace>SleepingBearSystems.TemporaryDatabase.Postgres.Tests</RootNamespace>
     <TargetFramework>net7.0</TargetFramework>
   </PropertyGroup>
 
@@ -29,7 +29,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Common\Common.csproj"/>
+    <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\Postgres\Postgres.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <AssemblyName>SleepingBearSystems.TemporaryDatabase.Postgres.Tests</AssemblyName>
-    <RootNamespace>SleepingBearSystems.TemporaryDatabase.Postgres.Tests</RootNamespace>
+    <AssemblyName>SleepingBearSystems.TemporaryDatabase.MySql.Tests</AssemblyName>
+    <RootNamespace>SleepingBearSystems.TemporaryDatabase.MySql.Tests</RootNamespace>
     <TargetFramework>net7.0</TargetFramework>
   </PropertyGroup>
 
@@ -29,7 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Postgres\Postgres.csproj"/>
+    <ProjectReference Include="..\MySql\MySql.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using SleepingBear.Functional.Errors;
+using SleepingBear.Functional.Testing;
 
 namespace SleepingBear.TemporaryDatabase.Postgres.Tests;
 
@@ -21,5 +23,12 @@ internal static class TemporaryDatabaseGuardTests
     {
         await using var guard = await TemporaryDatabaseGuard.FromEnvironmentVariableAsync();
         Assert.That(guard.ConnectionString, Is.Not.Null);
+    }
+
+    [Test]
+    public static void ConvertFromUri_EmptyString_ReturnError()
+    {
+        var result = TemporaryDatabaseGuard.ConvertFromUri("");
+        TestResult.IsError<string, InvalidFormatError>(result);
     }
 }

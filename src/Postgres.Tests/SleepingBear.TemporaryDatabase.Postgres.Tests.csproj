@@ -16,6 +16,7 @@
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
         <PackageReference Include="NUnit3TestAdapter" Version="4.6.0"/>
+        <PackageReference Include="SleepingBear.Functional.Testing" Version="1.5.0"/>
     </ItemGroup>
 
     <ItemGroup>

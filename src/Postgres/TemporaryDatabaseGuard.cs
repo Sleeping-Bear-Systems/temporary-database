@@ -3,6 +3,9 @@ using System.Globalization;
 using System.Text;
 using Npgsql;
 using SleepingBear.Functional.Common;
+using SleepingBear.Functional.Errors;
+using SleepingBear.Functional.Monads;
+using SleepingBear.Functional.Validation;
 
 namespace SleepingBear.TemporaryDatabase.Postgres;
 
@@ -66,14 +69,46 @@ public sealed class TemporaryDatabaseGuard : IAsyncDisposable
     {
         // set connection string
         var validOptions = options ?? DatabaseOptions.Defaults;
-        rawConnectionString = ConvertFromUri(rawConnectionString);
-        var connectionStringBuilder = new NpgsqlConnectionStringBuilder(rawConnectionString.IfNull())
-        {
-            Database = database,
-            SslMode = validOptions.SslMode
-        };
-        var databaseConnectionString = connectionStringBuilder.ToString();
-        connectionStringBuilder.Database = "postgres";
+        var (connectionStringBuilder, databaseConnectionString) = ConvertFromUri(rawConnectionString)
+            .Bind(connectionString =>
+            {
+                try
+                {
+                    return new NpgsqlConnectionStringBuilder(connectionString)
+                    {
+                        Database = database,
+                        SslMode = validOptions.SslMode
+                    };
+                }
+                catch (KeyNotFoundException ex)
+                {
+                    return ex.ToExceptionError().ToResultError<NpgsqlConnectionStringBuilder>();
+                }
+                catch (FormatException ex)
+                {
+                    return ex.ToExceptionError().ToResultError<NpgsqlConnectionStringBuilder>();
+                }
+                catch (ArgumentException ex)
+                {
+                    return ex.ToExceptionError().ToResultError<NpgsqlConnectionStringBuilder>();
+                }
+            })
+            .Bind(builder =>
+            {
+                var databaseConnectionString = builder.ConnectionString;
+                builder.Database = "postgres";
+                return (builder, databaseConnectionString).ToResultOk();
+            })
+            .MatchOrThrow(error =>
+            {
+                const string message = "Invalid connection string.";
+                return error switch
+                {
+                    ExceptionError ex => new InvalidOperationException(message, ex.Exception),
+                    _ => new InvalidOperationException(message)
+                };
+            });
+
 
         // create database
         await using var connection = new NpgsqlConnection(connectionStringBuilder.ToString());
@@ -107,23 +142,38 @@ public sealed class TemporaryDatabaseGuard : IAsyncDisposable
         await command.ExecuteNonQueryAsync();
     }
 
-    private static string? ConvertFromUri(string? rawConnectionString)
+    internal static Result<string> ConvertFromUri(string? rawConnectionString)
     {
-        if (string.IsNullOrWhiteSpace(rawConnectionString) ||
-            !rawConnectionString.StartsWith("postgresql://", StringComparison.OrdinalIgnoreCase))
+        return rawConnectionString
+            .AsToken(() => new InvalidFormatError())
+            .BindIf(
+                v => v.StartsWith("postgresql://", StringComparison.OrdinalIgnoreCase),
+                ConvertUriToConnectionString,
+                ValidateConnectionString);
+
+        static Result<string> ValidateConnectionString(string value)
         {
-            return rawConnectionString;
+            return value.TryCatch(
+                x => new NpgsqlConnectionStringBuilder(x).ConnectionString.ToResultOk(),
+                ex => ex.ExceptionHandler<ArgumentException, FormatException, KeyNotFoundException>());
         }
 
-        var uri = new Uri(rawConnectionString);
-        var connectionStringBuilder = new NpgsqlConnectionStringBuilder
+        static Result<string> ConvertUriToConnectionString(string value)
         {
-            Host = uri.Host,
-            Port = uri.Port,
-            Username = uri.UserInfo.Split(':')[0],
-            Password = uri.UserInfo.Split(':')[1],
-            Database = uri.LocalPath.TrimStart('/')
-        };
-        return connectionStringBuilder.ToString();
+            return value.TryCatch(
+                v => new Uri(v)
+                    .Pipe(uri => new NpgsqlConnectionStringBuilder
+                    {
+                        Host = uri.Host,
+                        Port = uri.Port,
+                        Username = uri.UserInfo.Split(':')[0],
+                        Password = uri.UserInfo.Split(':')[1],
+                        Database = uri.LocalPath.TrimStart('/')
+                    }.ConnectionString)
+                    .ToResultOk(),
+                ex =>
+                    ex.ExceptionHandler<UriFormatException, ArgumentException, FormatException,
+                        KeyNotFoundException>());
+        }
     }
 }

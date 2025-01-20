@@ -148,23 +148,32 @@ public sealed class TemporaryDatabaseGuard : IAsyncDisposable
             .AsToken(() => new InvalidFormatError())
             .BindIf(
                 v => v.StartsWith("postgresql://", StringComparison.OrdinalIgnoreCase),
-                v => v.TryCatch<string, string, UriFormatException, ArgumentException, FormatException,
-                    KeyNotFoundException>(
-                    x =>
+                ConvertUriToConnectionString,
+                ValidateConnectionString);
+
+        static Result<string> ValidateConnectionString(string value)
+        {
+            return value.TryCatch(
+                x => new NpgsqlConnectionStringBuilder(x).ConnectionString.ToResultOk(),
+                ex => ex.ExceptionHandler<ArgumentException, FormatException, KeyNotFoundException>());
+        }
+
+        static Result<string> ConvertUriToConnectionString(string value)
+        {
+            return value.TryCatch(
+                v => new Uri(v)
+                    .Pipe(uri => new NpgsqlConnectionStringBuilder
                     {
-                        // create a connection string from the URI and validate
-                        var uri = new Uri(x);
-                        var connectionStringBuilder = new NpgsqlConnectionStringBuilder
-                        {
-                            Host = uri.Host,
-                            Port = uri.Port,
-                            Username = uri.UserInfo.Split(':')[0],
-                            Password = uri.UserInfo.Split(':')[1],
-                            Database = uri.LocalPath.TrimStart('/')
-                        };
-                        return connectionStringBuilder.ConnectionString;
-                    }),
-                v => v.TryCatch<string, string, ArgumentException, FormatException, KeyNotFoundException>(
-                    x => new NpgsqlConnectionStringBuilder(x).ConnectionString));
+                        Host = uri.Host,
+                        Port = uri.Port,
+                        Username = uri.UserInfo.Split(':')[0],
+                        Password = uri.UserInfo.Split(':')[1],
+                        Database = uri.LocalPath.TrimStart('/')
+                    }.ConnectionString)
+                    .ToResultOk(),
+                ex =>
+                    ex.ExceptionHandler<UriFormatException, ArgumentException, FormatException,
+                        KeyNotFoundException>());
+        }
     }
 }

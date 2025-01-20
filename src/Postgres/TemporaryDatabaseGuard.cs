@@ -148,12 +148,12 @@ public sealed class TemporaryDatabaseGuard : IAsyncDisposable
             .AsToken(() => new InvalidFormatError())
             .BindIf(
                 v => v.StartsWith("postgresql://", StringComparison.OrdinalIgnoreCase),
-                v =>
-                {
-                    try
+                v => v.TryCatch<string, string, UriFormatException, ArgumentException, FormatException,
+                    KeyNotFoundException>(
+                    x =>
                     {
                         // create a connection string from the URI and validate
-                        var uri = new Uri(v);
+                        var uri = new Uri(x);
                         var connectionStringBuilder = new NpgsqlConnectionStringBuilder
                         {
                             Host = uri.Host,
@@ -163,43 +163,8 @@ public sealed class TemporaryDatabaseGuard : IAsyncDisposable
                             Database = uri.LocalPath.TrimStart('/')
                         };
                         return connectionStringBuilder.ConnectionString;
-                    }
-                    catch (UriFormatException ex)
-                    {
-                        return ex.ToExceptionError().ToResultError<string>();
-                    }
-                    catch (ArgumentException ex)
-                    {
-                        return ex.ToExceptionError().ToResultError<string>();
-                    }
-                    catch (FormatException ex)
-                    {
-                        return ex.ToExceptionError().ToResultError<string>();
-                    }
-                    catch (KeyNotFoundException ex)
-                    {
-                        return ex.ToExceptionError().ToResultError<string>();
-                    }
-                },
-                v =>
-                {
-                    try
-                    {
-                        // assume the value is a connection string and validate
-                        return new NpgsqlConnectionStringBuilder(v).ConnectionString;
-                    }
-                    catch (ArgumentException ex)
-                    {
-                        return ex.ToExceptionError().ToResultError<string>();
-                    }
-                    catch (FormatException ex)
-                    {
-                        return ex.ToExceptionError().ToResultError<string>();
-                    }
-                    catch (KeyNotFoundException ex)
-                    {
-                        return ex.ToExceptionError().ToResultError<string>();
-                    }
-                });
+                    }),
+                v => v.TryCatch<string, string, ArgumentException, FormatException, KeyNotFoundException>(
+                    x => new NpgsqlConnectionStringBuilder(x).ConnectionString));
     }
 }

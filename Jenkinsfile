@@ -15,6 +15,9 @@ pipeline {
         NUGET_API = 'https://api.nuget.org/v3/index.json'
         // sets the NEXUS_USR and NEXUS_PSW environment variables
         NEXUS = credentials('nexus')
+        SBS_TEST_SERVER_POSTGRES = credentials('sbs-test-server-postgres')
+        SBS_TEST_SERVER_MSSQL = credentials('sbs-test-server-mssql')
+        SBS_TEST_SERVER_MYSQL = credentials('sbs-test-server-mysql')
     }
     stages {
         stage('Build & Test') {

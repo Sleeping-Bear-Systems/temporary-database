@@ -9,33 +9,33 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
-        <PackageReference Include="NUnit" Version="4.3.2" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0"/>
+        <PackageReference Include="NUnit" Version="4.3.2"/>
         <PackageReference Include="NUnit.Analyzers" Version="4.6.0">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="NUnit3TestAdapter" Version="5.0.0" />
+        <PackageReference Include="NUnit3TestAdapter" Version="5.0.0"/>
     </ItemGroup>
 
     <!-- Transitive dependencies -->
     <ItemGroup>
-        <PackageReference Include="Microsoft.ApplicationInsights" Version="2.23.0" />
-        <PackageReference Include="Microsoft.Testing.Extensions.Telemetry" Version="1.6.2" />
-        <PackageReference Include="Microsoft.Testing.Extensions.TrxReport.Abstractions" Version="1.6.2" />
-        <PackageReference Include="Microsoft.Testing.Extensions.VSTestBridge" Version="1.6.2" />
-        <PackageReference Include="Microsoft.Testing.Platform" Version="1.6.2" />
-        <PackageReference Include="Microsoft.Testing.Platform.MSBuild" Version="1.6.2" />
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-        <PackageReference Include="System.Reflection.Metadata" Version="9.0.2" />
-    </ItemGroup>
-    
-    <ItemGroup>
-        <Using Include="NUnit.Framework" />
+        <PackageReference Include="Microsoft.ApplicationInsights" Version="2.23.0"/>
+        <PackageReference Include="Microsoft.Testing.Extensions.Telemetry" Version="1.6.2"/>
+        <PackageReference Include="Microsoft.Testing.Extensions.TrxReport.Abstractions" Version="1.6.2"/>
+        <PackageReference Include="Microsoft.Testing.Extensions.VSTestBridge" Version="1.6.2"/>
+        <PackageReference Include="Microsoft.Testing.Platform" Version="1.6.2"/>
+        <PackageReference Include="Microsoft.Testing.Platform.MSBuild" Version="1.6.2"/>
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
+        <PackageReference Include="System.Reflection.Metadata" Version="9.0.2"/>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\MySql\SleepingBear.TemporaryDatabase.MySql.csproj" />
+        <Using Include="NUnit.Framework"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\MySql\SleepingBear.TemporaryDatabase.MySql.csproj"/>
     </ItemGroup>
 
 </Project>

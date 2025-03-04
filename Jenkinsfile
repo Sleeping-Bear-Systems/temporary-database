@@ -12,9 +12,7 @@ pipeline {
         BUILD_SUFFIX = "${env.BRANCH_NAME == 'main' ? '' : env.BUILD_NUMBER}"
         VERSION = "${BASE_VERSION}${PREVIEW_SUFFIX}${BUILD_SUFFIX}"
         NUGET_API_KEY = credentials('nuget-api-key')
-        NUGET_API = 'https://api.nuget.org/v3/index.json'
-        // sets the NEXUS_USR and NEXUS_PSW environment variables
-        NEXUS = credentials('nexus')
+        NEXUS_API_KEY = credentials('nexus-api-key')
         SBS_TEST_SERVER_POSTGRES = credentials('sbs-test-server-postgres')
         SBS_TEST_SERVER_MSSQL = credentials('sbs-test-server-mssql')
         SBS_TEST_SERVER_MYSQL = credentials('sbs-test-server-mysql')
@@ -34,7 +32,7 @@ pipeline {
                 }
             }
             steps {
-                sh 'dotnet nuget push **/*.nupkg --source NexusHosted --skip-duplicate'
+                sh 'dotnet nuget push **/*.nupkg --source NexusHosted --api-key $NEXUS_API_KEY --skip-duplicate'
             }
         }
         stage('Publish nuget.org') {
@@ -42,7 +40,7 @@ pipeline {
                 branch 'main'
             }
             steps {
-                sh 'dotnet nuget push **/*.nupkg --source $NUGET_API --api-key $NUGET_API_KEY --skip-duplicate'
+                sh 'dotnet nuget push **/*.nupkg --source https://api.nuget.org/v3/index.json --api-key $NUGET_API_KEY --skip-duplicate'
             }
         }
     }

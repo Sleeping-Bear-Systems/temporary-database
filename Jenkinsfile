@@ -11,6 +11,7 @@ pipeline {
         PREVIEW_SUFFIX = "${env.BRANCH_NAME == 'main' ? '' : '-preview.'}"
         BUILD_SUFFIX = "${env.BRANCH_NAME == 'main' ? '' : env.BUILD_NUMBER}"
         VERSION = "${BASE_VERSION}${PREVIEW_SUFFIX}${BUILD_SUFFIX}"
+        NEXUS = credentials('nexus')
         NUGET_API_KEY = credentials('nuget-api-key')
         NEXUS_API_KEY = credentials('nexus-api-key')
         SBS_TEST_SERVER_POSTGRES = credentials('sbs-test-server-postgres')

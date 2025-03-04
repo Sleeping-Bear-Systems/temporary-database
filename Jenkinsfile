@@ -6,7 +6,7 @@ pipeline {
     }
     environment {
         HOME = '/tmp'
-        BASE_VERSION = '1.0.0'
+        BASE_VERSION = '1.0.1'
         VERSION_SUFFIX = ''
         PREVIEW_SUFFIX = "${env.BRANCH_NAME == 'main' ? '' : '-preview.'}"
         BUILD_SUFFIX = "${env.BRANCH_NAME == 'main' ? '' : env.BUILD_NUMBER}"
